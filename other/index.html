@@ -1,1532 +1,1693 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ICKS - Integrated Clinical Knowledge System</title>
-    <style>
-        :root {
-            --bg: #f0f4f8;
-            --sidebar-bg: #0f2b46;
-            --sidebar-hover: #1a3f5f;
-            --sidebar-active: #1b5a8c;
-            --primary: #1b6db5;
-            --primary-light: #e8f2fa;
-            --green: #0d9488;
-            --green-light: #e6f7f5;
-            --white: #ffffff;
-            --text: #1e293b;
-            --text-secondary: #64748b;
-            --text-light: #94a3b8;
-            --border: #e2e8f0;
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-            --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
-            --radius: 12px;
-            --radius-sm: 8px;
-            --radius-xs: 6px;
-            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            --sidebar-width: 250px;
-            --topbar-height: 60px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ICKS – Integrated Clinical Knowledge System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+  :root {
+    /* Core palette — "Clinical Trust" */
+    --blue-50:  #EEF4FF;
+    --blue-100: #E0EAFF;
+    --blue-200: #C7D7FD;
+    --blue-400: #6694F8;
+    --blue-500: #3B6EF6;
+    --blue-600: #2451D6;
+    --blue-700: #1A3BAA;
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    --slate-50:  #F8FAFC;
+    --slate-100: #F1F5F9;
+    --slate-200: #E2E8F0;
+    --slate-300: #CBD5E1;
+    --slate-400: #94A3B8;
+    --slate-500: #64748B;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1E293B;
+    --slate-900: #0F172A;
 
-        body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            display: flex;
-            min-height: 100vh;
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
+    --teal-400: #2DD4BF;
+    --teal-500: #14B8A6;
+    --teal-600: #0D9488;
 
-        /* SIDEBAR */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            color: #e2e8f0;
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100vh;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            transition: transform var(--transition);
-            box-shadow: 2px 0 16px rgba(0, 0, 0, 0.15);
-        }
+    --green-400: #4ADE80;
+    --green-500: #22C55E;
+    --green-50:  #F0FDF4;
+    --green-100: #DCFCE7;
 
-        .sidebar-header {
-            padding: 20px 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
+    --amber-400: #FBBF24;
+    --amber-500: #F59E0B;
+    --amber-50:  #FFFBEB;
+    --amber-100: #FEF3C7;
 
-        .sidebar-logo {
-            width: 38px;
-            height: 38px;
-            background: var(--primary);
-            border-radius: var(--radius-xs);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
+    --red-400:   #F87171;
+    --red-500:   #EF4444;
+    --red-50:    #FEF2F2;
+    --red-100:   #FEE2E2;
 
-        .sidebar-title {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            line-height: 1.3;
-            color: #ffffff;
-        }
-        .sidebar-title small {
-            font-weight: 400;
-            font-size: 10px;
-            letter-spacing: 0.5px;
-            color: #94b8d4;
-            display: block;
-        }
+    --sky-400:   #38BDF8;
+    --sky-500:   #0EA5E9;
+    --sky-50:    #F0F9FF;
+    --sky-100:   #E0F2FE;
 
-        .sidebar-nav {
-            flex: 1;
-            padding: 12px 10px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
-        }
+    /* Semantic */
+    --bg:         var(--slate-50);
+    --bg-white:   #FFFFFF;
+    --sidebar-bg: var(--slate-900);
+    --sidebar-text: #94A3B8;
+    --border:     var(--slate-200);
+    --text-primary:   var(--slate-800);
+    --text-secondary: var(--slate-500);
+    --text-tertiary:  var(--slate-400);
 
-        .sidebar-nav button {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            width: 100%;
-            padding: 12px 14px;
-            border: none;
-            background: transparent;
-            color: #c8d6e0;
-            cursor: pointer;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 500;
-            transition: all var(--transition);
-            text-align: left;
-            font-family: var(--font);
-            letter-spacing: 0.2px;
-            position: relative;
-        }
+    --accent:     var(--blue-500);
+    --accent-dim: var(--blue-50);
 
-        .sidebar-nav button:hover {
-            background: var(--sidebar-hover);
-            color: #ffffff;
-        }
-        .sidebar-nav button.active {
-            background: var(--sidebar-active);
-            color: #ffffff;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
-        .sidebar-nav button .nav-icon {
-            font-size: 18px;
-            width: 26px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-        .sidebar-nav button .badge-dot {
-            margin-left: auto;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #f59e0b;
-            flex-shrink: 0;
-        }
+    --sidebar-w: 256px;
+    --topbar-h:  64px;
 
-        .sidebar-footer {
-            padding: 14px 18px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 11px;
-            color: #7a9bb5;
-            text-align: center;
-            flex-shrink: 0;
-        }
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius:    12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
 
-        /* MOBILE SIDEBAR TOGGLE */
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 99;
-        }
-        .sidebar-overlay.show {
-            display: block;
-        }
-        .hamburger {
-            display: none;
-            position: fixed;
-            top: 12px;
-            left: 12px;
-            z-index: 110;
-            background: var(--sidebar-bg);
-            color: #fff;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-sm);
-            font-size: 22px;
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow);
-            transition: all var(--transition);
-        }
+    --shadow-xs: 0 1px 2px rgba(15,23,42,0.06);
+    --shadow-sm: 0 1px 3px rgba(15,23,42,0.08), 0 1px 2px rgba(15,23,42,0.06);
+    --shadow:    0 4px 6px -1px rgba(15,23,42,0.07), 0 2px 4px -2px rgba(15,23,42,0.05);
+    --shadow-md: 0 10px 15px -3px rgba(15,23,42,0.08), 0 4px 6px -4px rgba(15,23,42,0.05);
+    --shadow-lg: 0 20px 25px -5px rgba(15,23,42,0.1), 0 8px 10px -6px rgba(15,23,42,0.04);
 
-        /* MAIN CONTENT */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            flex: 1;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: margin-left var(--transition);
-        }
+    --transition: 0.18s cubic-bezier(0.4,0,0.2,1);
+  }
 
-        .topbar {
-            height: var(--topbar-height);
-            background: var(--white);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            gap: 16px;
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-        .topbar-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text);
-            letter-spacing: 0.2px;
-        }
-        .topbar-breadcrumb {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .page-container {
-            padding: 24px;
-            flex: 1;
-        }
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
 
-        /* PAGES */
-        .page {
-            display: none;
-            animation: fadeSlideIn 0.35s ease;
-        }
-        .page.active {
-            display: block;
-        }
-        @keyframes fadeSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+  /* ── SIDEBAR ───────────────────────────────────────── */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
 
-        /* CARDS */
-        .card {
-            background: var(--white);
-            border-radius: var(--radius);
-            padding: 20px 22px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            transition: all var(--transition);
-        }
-        .card:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px);
-        }
-        .card-header {
-            font-weight: 700;
-            font-size: 15px;
-            margin-bottom: 8px;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .card-stat {
-            font-size: 34px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-        .card-stat.blue {
-            color: var(--primary);
-        }
-        .card-stat.green {
-            color: var(--green);
-        }
-        .card-stat.orange {
-            color: #d97706;
-        }
-        .card-sub {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 2px;
-        }
-        .card-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-        .card-icon.blue {
-            background: var(--primary-light);
-        }
-        .card-icon.green {
-            background: var(--green-light);
-        }
-        .card-icon.orange {
-            background: #fef3c7;
-        }
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--blue-500), var(--teal-500));
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(59,110,246,0.4);
+  }
+  .logo-text .logo-mark {
+    font-family: 'Lora', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: -0.3px;
+  }
+  .logo-text .logo-sub {
+    font-size: 10px;
+    color: rgba(148,163,184,0.7);
+    font-weight: 400;
+    line-height: 1.4;
+    margin-top: 1px;
+    letter-spacing: 0.2px;
+  }
 
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
+  .sidebar-section-label {
+    padding: 18px 20px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: rgba(148,163,184,0.45);
+  }
 
-        .two-col {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+  .sidebar-nav { flex: 1; padding: 8px 12px 16px; display: flex; flex-direction: column; gap: 1px; }
 
-        /* ACTIVITY FEED */
-        .activity-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .activity-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 14px;
-        }
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-        .activity-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            margin-top: 5px;
-        }
-        .activity-dot.blue {
-            background: #3b82f6;
-        }
-        .activity-dot.green {
-            background: #10b981;
-        }
-        .activity-dot.orange {
-            background: #f59e0b;
-        }
-        .activity-time {
-            font-size: 11px;
-            color: var(--text-light);
-            white-space: nowrap;
-            margin-left: auto;
-        }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--sidebar-text);
+    transition: all var(--transition);
+    position: relative;
+    user-select: none;
+    letter-spacing: -0.1px;
+  }
+  .nav-item:hover {
+    background: rgba(255,255,255,0.06);
+    color: #E2E8F0;
+  }
+  .nav-item.active {
+    background: rgba(59,110,246,0.18);
+    color: #93B4FC;
+  }
+  .nav-item.active .nav-icon-wrap {
+    background: rgba(59,110,246,0.25);
+    color: var(--blue-400);
+  }
+  .nav-icon-wrap {
+    width: 30px; height: 30px;
+    border-radius: var(--radius-xs);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    background: rgba(255,255,255,0.05);
+    flex-shrink: 0;
+    transition: all var(--transition);
+  }
+  .nav-item:hover .nav-icon-wrap { background: rgba(255,255,255,0.08); }
+  .nav-badge {
+    margin-left: auto;
+    background: var(--red-500);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 99px;
+    line-height: 1.6;
+    font-family: 'Sora', sans-serif;
+  }
+  .nav-item.active .nav-badge { background: rgba(59,110,246,0.5); color: #93B4FC; }
 
-        /* BUTTONS */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            padding: 10px 18px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            transition: all var(--transition);
-            font-family: var(--font);
-            letter-spacing: 0.2px;
-            white-space: nowrap;
-        }
-        .btn-primary {
-            background: var(--primary);
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: #155a8a;
-            box-shadow: var(--shadow);
-        }
-        .btn-outline {
-            background: var(--white);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-        .btn-outline:hover {
-            background: var(--primary-light);
-        }
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-            border-radius: var(--radius-xs);
-        }
-        .btn-close {
-            background: transparent;
-            border: none;
-            font-size: 22px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            padding: 4px 8px;
-            border-radius: 50%;
-            transition: all var(--transition);
-            line-height: 1;
-        }
-        .btn-close:hover {
-            background: #f1f5f9;
-            color: var(--text);
-        }
+  .sidebar-footer {
+    padding: 14px 16px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+  .clinic-chip {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.04);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .clinic-chip-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: rgba(59,110,246,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+  }
+  .clinic-chip-text .name { font-size: 12px; font-weight: 600; color: #CBD5E1; line-height: 1.3; }
+  .clinic-chip-text .ver { font-size: 10px; color: rgba(148,163,184,0.5); margin-top: 1px; }
 
-        /* BADGES */
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
-        }
-        .badge-new {
-            background: #fef3c7;
-            color: #92400e;
-        }
-        .badge-updated {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        .badge-important {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-        .badge-info {
-            background: #dbeafe;
-            color: #1e40af;
-        }
+  /* ── MAIN ─────────────────────────────────────────── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
 
-        /* CASE LIST */
-        .case-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .case-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 15px 18px;
-            background: var(--white);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all var(--transition);
-            box-shadow: var(--shadow-sm);
-        }
-        .case-item:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow);
-            transform: translateX(3px);
-        }
-        .case-item .case-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--primary-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-        .case-item .case-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .case-item .case-title {
-            font-weight: 600;
-            font-size: 14px;
-            color: var(--text);
-            margin-bottom: 2px;
-        }
-        .case-item .case-meta {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .case-item .case-arrow {
-            color: var(--text-light);
-            font-size: 18px;
-            flex-shrink: 0;
-        }
+  .topbar {
+    background: var(--bg-white);
+    border-bottom: 1px solid var(--border);
+    height: var(--topbar-h);
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 14px; }
+  .topbar-breadcrumb {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--text-tertiary);
+  }
+  .topbar-breadcrumb .current { color: var(--text-primary); font-weight: 600; }
+  .topbar-divider { width: 1px; height: 16px; background: var(--border); }
+  .topbar-context { font-size: 12px; color: var(--text-secondary); }
 
-        /* SOP LIST */
-        .sop-search {
-            width: 100%;
-            padding: 11px 16px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-family: var(--font);
-            transition: all var(--transition);
-            margin-bottom: 16px;
-            background: var(--white);
-        }
-        .sop-search:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(27, 109, 181, 0.1);
-        }
-        .sop-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        .sop-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            background: var(--white);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            transition: all var(--transition);
-            box-shadow: var(--shadow-sm);
-        }
-        .sop-item:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow);
-        }
-        .sop-item .sop-icon {
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-        .sop-item .sop-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .sop-item .sop-title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .sop-item .sop-desc {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .sop-item.highlight {
-            border-left: 4px solid #f59e0b;
-            background: #fffdf5;
-        }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .topbar-date {
+    font-size: 12px; color: var(--text-tertiary);
+    background: var(--slate-100);
+    padding: 5px 12px;
+    border-radius: 99px;
+    border: 1px solid var(--border);
+  }
+  .topbar-notif {
+    width: 34px; height: 34px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-white);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 16px;
+    position: relative;
+    transition: all var(--transition);
+  }
+  .topbar-notif:hover { background: var(--slate-100); }
+  .notif-badge {
+    position: absolute; top: -4px; right: -4px;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--red-500);
+    border: 1.5px solid var(--bg-white);
+  }
+  .avatar {
+    width: 34px; height: 34px;
+    background: linear-gradient(135deg, var(--blue-500), var(--teal-500));
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+  }
 
-        /* DISCUSSION */
-        .thread-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .thread-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 15px 18px;
-            background: var(--white);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: all var(--transition);
-            box-shadow: var(--shadow-sm);
-        }
-        .thread-item:hover {
-            border-color: var(--primary);
-            box-shadow: var(--shadow);
-            transform: translateX(2px);
-        }
-        .thread-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #e0e7ff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
-            font-weight: 700;
-            color: #4f46e5;
-        }
-        .thread-info {
-            flex: 1;
-            min-width: 0;
-        }
-        .thread-title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .thread-meta {
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-        .thread-replies {
-            flex-shrink: 0;
-            text-align: center;
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 13px;
-            background: var(--primary-light);
-            padding: 6px 12px;
-            border-radius: 20px;
-            min-width: 44px;
-        }
+  /* ── PAGE LAYOUT ──────────────────────────────────── */
+  .page-content { padding: 28px 28px 48px; flex: 1; }
+  .page { display: none; animation: pageIn 0.22s ease; }
+  .page.active { display: block; }
+  @keyframes pageIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
 
-        /* UPDATES */
-        .update-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .update-item {
-            padding: 16px 18px;
-            background: var(--white);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            transition: all var(--transition);
-        }
-        .update-item:hover {
-            box-shadow: var(--shadow);
-        }
-        .update-item.important {
-            border-left: 4px solid #ef4444;
-            background: #fffbfb;
-        }
-        .update-item .update-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 4px;
-        }
-        .update-item .update-title {
-            font-weight: 700;
-            font-size: 14px;
-        }
-        .update-item .update-date {
-            font-size: 11px;
-            color: var(--text-light);
-        }
-        .update-item .update-desc {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-        }
+  /* ── PAGE HEADER ──────────────────────────────────── */
+  .page-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 24px; gap: 16px;
+    flex-wrap: wrap;
+  }
+  .page-header-text {}
+  .page-eyebrow {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--blue-500);
+    margin-bottom: 6px;
+  }
+  .page-eyebrow::before {
+    content: '';
+    width: 16px; height: 2px;
+    background: var(--blue-500);
+    border-radius: 99px;
+  }
+  .page-title {
+    font-family: 'Lora', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+  .page-sub { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
 
-        /* MODAL */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.6);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .modal-overlay.show {
-            display: flex;
-        }
-        .modal {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            width: 100%;
-            max-width: 640px;
-            max-height: 85vh;
-            overflow-y: auto;
-            animation: modalIn 0.3s ease;
-        }
-        @keyframes modalIn {
-            from {
-                opacity: 0;
-                transform: scale(0.94) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 22px;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            background: var(--white);
-            z-index: 10;
-            border-radius: var(--radius) var(--radius) 0 0;
-        }
-        .modal-header h3 {
-            font-size: 17px;
-            font-weight: 700;
-            margin: 0;
-        }
-        .modal-body {
-            padding: 20px 22px;
-        }
-        .modal-body .info-row {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
-            flex-wrap: wrap;
-        }
-        .modal-body .info-label {
-            font-weight: 700;
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            min-width: 90px;
-        }
-        .modal-body .info-value {
-            font-size: 14px;
-            color: var(--text);
-            font-weight: 500;
-        }
-        .modal-body .section-title {
-            font-weight: 700;
-            font-size: 14px;
-            margin: 16px 0 8px;
-            color: var(--primary);
-            padding-bottom: 6px;
-            border-bottom: 2px solid var(--primary-light);
-        }
-        .modal-body p {
-            font-size: 14px;
-            line-height: 1.7;
-            color: var(--text);
-            margin-bottom: 8px;
-        }
-        .discussion-message {
-            padding: 12px 14px;
-            background: #f8fafc;
-            border-radius: var(--radius-sm);
-            margin-bottom: 10px;
-            border-left: 3px solid #cbd5e1;
-        }
-        .discussion-message .msg-author {
-            font-weight: 700;
-            font-size: 13px;
-            margin-bottom: 3px;
-        }
-        .discussion-message .msg-text {
-            font-size: 13px;
-            color: var(--text);
-            line-height: 1.5;
-        }
-        .discussion-message .msg-time {
-            font-size: 11px;
-            color: var(--text-light);
-            margin-top: 4px;
-        }
+  /* ── BUTTONS ──────────────────────────────────────── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 16px;
+    border-radius: var(--radius-sm);
+    font-family: 'Sora', sans-serif;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none;
+    transition: all var(--transition);
+    text-decoration: none;
+    letter-spacing: -0.1px;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--blue-500);
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(59,110,246,0.3), 0 4px 8px rgba(59,110,246,0.15);
+  }
+  .btn-primary:hover {
+    background: var(--blue-600);
+    box-shadow: 0 2px 4px rgba(59,110,246,0.3), 0 6px 12px rgba(59,110,246,0.2);
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: transparent;
+    color: var(--blue-600);
+    border: 1.5px solid var(--blue-200);
+  }
+  .btn-outline:hover { background: var(--blue-50); border-color: var(--blue-400); }
+  .btn-ghost {
+    background: var(--slate-100);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--slate-200); }
 
-        /* FORM */
-        .form-group {
-            margin-bottom: 14px;
-        }
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 5px;
-            color: var(--text);
-        }
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-xs);
-            font-size: 14px;
-            font-family: var(--font);
-            transition: all var(--transition);
-            background: #fafbfc;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(27, 109, 181, 0.08);
-            background: #fff;
-        }
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
+  .btn-sm { padding: 6px 12px; font-size: 12px; }
 
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .two-col {
-                grid-template-columns: 1fr;
-            }
-            .stat-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            }
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .sidebar-overlay.show {
-                display: block;
-            }
-            .hamburger {
-                display: flex;
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            .topbar {
-                padding-left: 60px;
-            }
-            .page-container {
-                padding: 14px;
-            }
-            .card-stat {
-                font-size: 26px;
-            }
-            .modal {
-                max-width: 95vw;
-                max-height: 90vh;
-            }
-        }
-        @media (max-width: 480px) {
-            .stat-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-            .card {
-                padding: 14px 16px;
-            }
-            .case-item,
-            .thread-item,
-            .sop-item {
-                padding: 12px 14px;
-                gap: 10px;
-            }
-            .btn {
-                padding: 8px 14px;
-                font-size: 13px;
-            }
-        }
-    </style>
+  /* ── BADGES ───────────────────────────────────────── */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 99px;
+    font-size: 10.5px; font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  .badge-new { background: var(--green-100); color: #15803D; }
+  .badge-updated { background: var(--amber-100); color: #92400E; }
+  .badge-critical { background: var(--red-100); color: #B91C1C; }
+  .badge-info { background: var(--sky-100); color: #0369A1; }
+  .badge-blue { background: var(--blue-100); color: var(--blue-700); }
+  .badge-live {
+    background: var(--green-100); color: #15803D;
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* ── CARDS ────────────────────────────────────────── */
+  .card {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    transition: all var(--transition);
+  }
+  .card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+  /* ── STAT CARDS ───────────────────────────────────── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px,1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    transition: all var(--transition);
+    position: relative; overflow: hidden;
+    cursor: default;
+  }
+  .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .stat-card-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .stat-icon-wrap {
+    width: 44px; height: 44px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 14px;
+  }
+  .stat-card.blue .stat-card-accent { background: linear-gradient(90deg, var(--blue-500), var(--teal-400)); }
+  .stat-card.blue .stat-icon-wrap { background: var(--blue-50); }
+  .stat-card.green .stat-card-accent { background: linear-gradient(90deg, var(--green-500), var(--teal-400)); }
+  .stat-card.green .stat-icon-wrap { background: var(--green-50); }
+  .stat-card.amber .stat-card-accent { background: linear-gradient(90deg, var(--amber-500), #F97316); }
+  .stat-card.amber .stat-icon-wrap { background: var(--amber-50); }
+  .stat-card.rose .stat-card-accent { background: linear-gradient(90deg, #EF4444, #E879F9); }
+  .stat-card.rose .stat-icon-wrap { background: var(--red-50); }
+
+  .stat-value {
+    font-family: 'Lora', serif;
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1;
+    margin-bottom: 5px;
+  }
+  .stat-label { font-size: 12.5px; color: var(--text-secondary); font-weight: 500; }
+  .stat-change {
+    font-size: 11.5px;
+    color: var(--green-500);
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* ── ACTIVITY FEED ────────────────────────────────── */
+  .feed-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--slate-100);
+  }
+  .feed-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .feed-dot-wrap {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 13px;
+  }
+  .feed-dot-wrap.blue { background: var(--blue-50); }
+  .feed-dot-wrap.green { background: var(--green-50); }
+  .feed-dot-wrap.amber { background: var(--amber-50); }
+  .feed-dot-wrap.rose { background: var(--red-50); }
+  .feed-dot-wrap.teal { background: var(--sky-50); }
+  .feed-text { font-size: 13px; color: var(--text-primary); line-height: 1.5; }
+  .feed-text strong { color: var(--blue-600); font-weight: 600; }
+  .feed-time { font-size: 11px; color: var(--text-tertiary); margin-top: 3px; }
+
+  /* ── TWO COL ──────────────────────────────────────── */
+  .two-col { display: grid; grid-template-columns: 1fr 360px; gap: 18px; }
+  @media (max-width: 1100px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── PROGRESS BAR ─────────────────────────────────── */
+  .progress-bar { background: var(--slate-100); border-radius: 99px; height: 5px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--blue-500), var(--teal-400)); }
+
+  /* ── PILL NAV ─────────────────────────────────────── */
+  .pill-nav { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+  .pill {
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 12.5px; font-weight: 600;
+    cursor: pointer;
+    border: 1.5px solid var(--border);
+    color: var(--text-secondary);
+    background: var(--bg-white);
+    transition: all var(--transition);
+    font-family: 'Sora', sans-serif;
+    letter-spacing: -0.1px;
+  }
+  .pill:hover { border-color: var(--blue-300); color: var(--blue-600); background: var(--blue-50); }
+  .pill.active { background: var(--blue-500); border-color: var(--blue-500); color: #fff; }
+
+  /* ── SEARCH ───────────────────────────────────────── */
+  .search-bar { position: relative; margin-bottom: 18px; }
+  .search-bar input {
+    width: 100%; padding: 11px 16px 11px 42px;
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'Sora', sans-serif;
+    font-size: 13.5px;
+    outline: none;
+    transition: all var(--transition);
+  }
+  .search-bar input:focus { border-color: var(--blue-400); box-shadow: 0 0 0 3px rgba(59,110,246,0.08); }
+  .search-bar input::placeholder { color: var(--text-tertiary); }
+  .search-bar .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; }
+
+  /* ── CASE CARDS ───────────────────────────────────── */
+  .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px,1fr)); gap: 14px; }
+  .case-card {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    cursor: pointer;
+    transition: all var(--transition);
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .case-card:hover {
+    border-color: var(--blue-300);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .case-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .case-id-chip {
+    font-size: 10.5px; font-weight: 700;
+    color: var(--blue-600);
+    background: var(--blue-50);
+    border: 1px solid var(--blue-100);
+    padding: 2px 8px;
+    border-radius: 99px;
+    letter-spacing: 0.3px;
+  }
+  .case-badges { display: flex; gap: 4px; }
+  .case-title { font-size: 14.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; letter-spacing: -0.2px; }
+  .case-diag {
+    display: inline-flex; align-items: center;
+    font-size: 11.5px; font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 99px;
+    background: var(--sky-50);
+    color: #0369A1;
+    border: 1px solid var(--sky-100);
+    margin-bottom: 10px;
+  }
+  .case-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; flex: 1; }
+  .case-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--slate-100);
+  }
+  .case-meta { font-size: 11.5px; color: var(--text-tertiary); line-height: 1.6; }
+  .case-arrow {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--blue-50);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--blue-500); font-size: 13px;
+    transition: all var(--transition);
+  }
+  .case-card:hover .case-arrow { background: var(--blue-500); color: #fff; }
+
+  /* ── SOP ──────────────────────────────────────────── */
+  .sop-list { display: flex; flex-direction: column; gap: 8px; }
+  .sop-item {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 15px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; transition: all var(--transition);
+  }
+  .sop-item:hover {
+    border-color: var(--blue-300);
+    box-shadow: var(--shadow);
+    transform: translateX(3px);
+  }
+  .sop-item.updated { border-left: 3px solid var(--amber-400); }
+  .sop-item.new-sop { border-left: 3px solid var(--green-500); }
+  .sop-left { display: flex; align-items: center; gap: 14px; }
+  .sop-icon-wrap {
+    width: 38px; height: 38px;
+    border-radius: var(--radius-sm);
+    background: var(--slate-100);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .sop-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+  .sop-dept { font-size: 11.5px; color: var(--text-tertiary); margin-top: 2px; }
+  .sop-right { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-tertiary); }
+
+  /* ── THREADS ──────────────────────────────────────── */
+  .threads-list { display: flex; flex-direction: column; gap: 8px; }
+  .thread-item {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    cursor: pointer; transition: all var(--transition);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .thread-item:hover { border-color: var(--blue-300); box-shadow: var(--shadow); }
+  .thread-avatar {
+    width: 40px; height: 40px; border-radius: var(--radius-sm); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #fff;
+  }
+  .thread-content { flex: 1; }
+  .thread-title { font-size: 13.5px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.2px; }
+  .thread-meta { font-size: 12px; color: var(--text-tertiary); }
+  .thread-stats { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+  .thread-replies { font-size: 12.5px; font-weight: 600; color: var(--blue-500); }
+  .thread-time { font-size: 11px; color: var(--text-tertiary); }
+
+  /* ── DISCUSSION ───────────────────────────────────── */
+  .discussion-view { display: none; }
+  .discussion-view.active { display: block; }
+  .msg-list { display: flex; flex-direction: column; gap: 10px; margin: 18px 0; }
+  .msg-bubble {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 15px 18px;
+  }
+  .msg-bubble.mine {
+    background: var(--blue-50);
+    border-color: var(--blue-100);
+    margin-left: 32px;
+  }
+  .msg-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .msg-avatar {
+    width: 30px; height: 30px; border-radius: var(--radius-xs);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #fff;
+  }
+  .msg-author { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+  .msg-time { font-size: 11px; color: var(--text-tertiary); margin-left: auto; }
+  .msg-text { font-size: 13.5px; line-height: 1.7; color: var(--text-primary); }
+
+  /* ── UPDATES ──────────────────────────────────────── */
+  .updates-list { display: flex; flex-direction: column; gap: 12px; }
+  .update-item {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    transition: all var(--transition);
+    cursor: pointer;
+  }
+  .update-item:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .update-item.important { border-left: 4px solid var(--red-400); }
+  .update-item.bpjs { border-left: 4px solid var(--sky-500); }
+  .update-item.internal { border-left: 4px solid var(--green-500); }
+  .update-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .update-cat-tag {
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px; padding: 3px 9px; border-radius: 99px;
+  }
+  .update-cat-tag.important { background: var(--red-50); color: var(--red-500); }
+  .update-cat-tag.bpjs { background: var(--sky-50); color: var(--sky-500); }
+  .update-cat-tag.internal { background: var(--green-50); color: var(--green-500); }
+  .update-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; line-height: 1.4; letter-spacing: -0.2px; }
+  .update-summary { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .update-footer {
+    display: flex; align-items: center; gap: 8px;
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--slate-100);
+    font-size: 12px; color: var(--text-tertiary);
+  }
+  .update-read-more { margin-left: auto; color: var(--blue-500); font-weight: 600; font-size: 12px; }
+
+  /* ── MODAL ────────────────────────────────────────── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,0.5);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: none; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .modal-overlay.open { display: flex; animation: fadeIn 0.18s ease; }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  .modal {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-xl);
+    width: 100%; max-width: 640px;
+    max-height: 88vh; overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp { from { transform:translateY(16px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+  .modal-header {
+    padding: 22px 26px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .modal-body { padding: 22px 26px; }
+  .modal-close {
+    background: var(--slate-100);
+    border: 1px solid var(--border);
+    color: var(--text-tertiary);
+    width: 30px; height: 30px;
+    border-radius: var(--radius-xs);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all var(--transition);
+    flex-shrink: 0; margin-left: 12px;
+  }
+  .modal-close:hover { background: var(--red-50); color: var(--red-500); border-color: var(--red-200); }
+
+  /* ── FORM INPUTS ──────────────────────────────────── */
+  .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); display: block; margin-bottom: 6px; letter-spacing: 0.2px; }
+  .form-input {
+    width: 100%; padding: 10px 13px;
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: 'Sora', sans-serif;
+    font-size: 13.5px;
+    outline: none;
+    transition: all var(--transition);
+  }
+  .form-input:focus { border-color: var(--blue-400); box-shadow: 0 0 0 3px rgba(59,110,246,0.08); }
+  .form-input::placeholder { color: var(--text-tertiary); }
+  select.form-input { appearance: none; }
+
+  /* ── DETAIL FIELDS ────────────────────────────────── */
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+  .detail-field { background: var(--slate-50); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 13px 15px; }
+  .detail-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-tertiary); margin-bottom: 5px; }
+  .detail-value { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+  .detail-full { grid-column: 1 / -1; }
+
+  /* ── INFO CARDS ────────────────────────────────────── */
+  .info-card {
+    background: var(--bg-white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+    margin-bottom: 12px;
+  }
+  .info-card-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+  }
+  .info-card-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .info-card-text { font-size: 13.5px; color: var(--text-primary); line-height: 1.7; }
+
+  /* ── TAGS ─────────────────────────────────────────── */
+  .tag {
+    display: inline-flex; align-items: center;
+    padding: 4px 10px; border-radius: 99px;
+    font-size: 11.5px; font-weight: 600;
+    background: var(--slate-100);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    margin: 2px;
+  }
+
+  /* ── DIVIDER ──────────────────────────────────────── */
+  .divider { height: 1px; background: var(--border); margin: 18px 0; }
+
+  /* ── BACK BUTTON ──────────────────────────────────── */
+  .back-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 13px; color: var(--text-secondary); cursor: pointer;
+    margin-bottom: 22px; transition: color var(--transition);
+    background: none; border: none;
+    font-family: 'Sora', sans-serif; padding: 0;
+    font-weight: 500;
+  }
+  .back-btn:hover { color: var(--blue-500); }
+
+  /* ── EMPTY STATE ──────────────────────────────────── */
+  .empty { text-align: center; padding: 60px 20px; color: var(--text-tertiary); }
+  .empty .empty-icon { font-size: 40px; margin-bottom: 10px; }
+  .empty p { font-size: 13.5px; }
+
+  /* ── QUICK ACCESS CARD ────────────────────────────── */
+  .quick-link {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all var(--transition);
+    background: var(--bg-white);
+    font-size: 13px; font-weight: 500;
+    color: var(--text-primary);
+  }
+  .quick-link:hover { border-color: var(--blue-300); background: var(--blue-50); color: var(--blue-600); }
+  .quick-link-icon {
+    width: 30px; height: 30px; border-radius: var(--radius-xs);
+    background: var(--slate-100);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+    transition: all var(--transition);
+  }
+  .quick-link:hover .quick-link-icon { background: var(--blue-100); }
+
+  /* ── SCROLLBAR ────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--slate-200); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--slate-300); }
+
+  /* ── SECTION DIVIDER ROW ──────────────────────────── */
+  .row-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .row-title { font-size: 14px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.2px; }
+</style>
 </head>
 <body>
 
-    <!-- HAMBURGER (mobile) -->
-    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" title="Menu">☰</button>
+<!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon"><i class="fas fa-clinic-medical"></i></div>
+    <div class="logo-text">
+      <div class="logo-mark">ICKS</div>
+      <div class="logo-sub">Integrated Clinical<br>Knowledge System</div>
+    </div>
+  </div>
 
-    <!-- SIDEBAR OVERLAY -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <div class="sidebar-section-label">Menu Utama</div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+      <div class="nav-icon-wrap"><i class="fas fa-chart-line"></i></div> Dashboard
+    </div>
+    <div class="nav-item" data-page="cases" onclick="navigate('cases')">
+      <div class="nav-icon-wrap"><i class="fas fa-folder-open"></i></div> Case Knowledge
+      <span class="nav-badge">12</span>
+    </div>
+    <div class="nav-item" data-page="sop" onclick="navigate('sop')">
+      <div class="nav-icon-wrap"><i class="fas fa-clipboard-list"></i></div> SOP & Guidelines
+    </div>
+    <div class="nav-item" data-page="forum" onclick="navigate('forum')">
+      <div class="nav-icon-wrap"><i class="fas fa-comments"></i></div> Discussion Forum
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" data-page="updates" onclick="navigate('updates')">
+      <div class="nav-icon-wrap"><i class="fas fa-bell"></i></div> Knowledge Updates
+    </div>
+  </nav>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <div class="sidebar-logo">🏥</div>
-            <div class="sidebar-title">ICKS<small>Integrated Clinical Knowledge System</small></div>
+  <div class="sidebar-footer">
+    <div class="clinic-chip">
+      <div class="clinic-chip-icon"><i class="fas fa-hospital"></i></div>
+      <div class="clinic-chip-text">
+        <div class="name">Klinik Pratama Isykarima</div>
+        <div class="ver">v1.0.0 · 2026</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<main class="main">
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-breadcrumb">
+        <span>ICKS</span>
+        <span style="color:var(--slate-300);">/</span>
+        <span class="current" id="topbar-page-name">Dashboard</span>
+      </div>
+      <div class="topbar-divider"></div>
+      <div class="topbar-context">Klinik Pratama Isykarima</div>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date" id="topbar-date"></span>
+      <div class="topbar-notif"><i class="fas fa-bell"></i><span class="notif-badge"></span></div>
+      <div class="avatar">A</div>
+    </div>
+  </header>
+
+  <div class="page-content">
+
+    <!-- ══════════════════ DASHBOARD ══════════════════ -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-header-text">
+          <div class="page-eyebrow">Overview</div>
+          <div class="page-title">Dashboard</div>
+          <div class="page-sub">Selamat datang kembali, dr. Admin</div>
         </div>
-        <nav class="sidebar-nav">
-            <button data-page="dashboard" class="active" aria-label="Dashboard">
-                <span class="nav-icon">📊</span> Dashboard
-            </button>
-            <button data-page="cases" aria-label="Case Knowledge">
-                <span class="nav-icon">📋</span> Case Knowledge
-                <span class="badge-dot" title="New cases"></span>
-            </button>
-            <button data-page="sop" aria-label="SOP & Guidelines">
-                <span class="nav-icon">📘</span> SOP & Guidelines
-                <span class="badge-dot" title="Updated SOPs"></span>
-            </button>
-            <button data-page="discussions" aria-label="Discussion Forum">
-                <span class="nav-icon">💬</span> Discussion Forum
-            </button>
-            <button data-page="updates" aria-label="Knowledge Updates">
-                <span class="nav-icon">🔔</span> Knowledge Updates
-                <span class="badge-dot" title="New updates"></span>
-            </button>
-        </nav>
-        <div class="sidebar-footer">© 2026 ICKS v1.0<br>Clinical Knowledge Management</div>
-    </aside>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="navigate('cases'); setTimeout(()=>openAddCase(),200)">
+            <i class="fas fa-plus"></i> Tambah Kasus
+          </button>
+          <button class="btn btn-ghost" onclick="navigate('sop')"><i class="fas fa-clipboard-list"></i> Lihat SOP</button>
+        </div>
+      </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content" id="mainContent">
-        <!-- TOPBAR -->
-        <div class="topbar">
-            <span class="topbar-breadcrumb" id="breadcrumb">📊</span>
-            <span class="topbar-title" id="pageTitle">Dashboard</span>
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-card-accent"></div>
+          <div class="stat-icon-wrap"><i class="fas fa-folder-open"></i></div>
+          <div class="stat-value">48</div>
+          <div class="stat-label">Total Kasus Terdokumentasi</div>
+          <div class="stat-change">↑ 4 kasus baru minggu ini</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-card-accent"></div>
+          <div class="stat-icon-wrap"><i class="fas fa-comments"></i></div>
+          <div class="stat-value">7</div>
+          <div class="stat-label">Diskusi Aktif</div>
+          <div class="stat-change">↑ 2 diskusi baru hari ini</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-card-accent"></div>
+          <div class="stat-icon-wrap"><i class="fas fa-clipboard-list"></i></div>
+          <div class="stat-value">15</div>
+          <div class="stat-label">Update SOP</div>
+          <div class="stat-change">3 SOP diperbarui bulan ini</div>
+        </div>
+        <div class="stat-card rose">
+          <div class="stat-card-accent"></div>
+          <div class="stat-icon-wrap"><i class="fas fa-user-md"></i></div>
+          <div class="stat-value">9</div>
+          <div class="stat-label">Dokter & Staf Aktif</div>
+          <div class="stat-change">Semua tim online</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="row-header">
+            <div class="row-title">Feed Aktivitas Terkini</div>
+            <span class="badge badge-live"><i class="fas fa-circle"></i> Live</span>
+          </div>
+          <div id="activity-feed"></div>
         </div>
 
-        <!-- PAGE CONTAINER -->
-        <div class="page-container">
-
-            <!-- DASHBOARD PAGE -->
-            <section class="page active" id="page-dashboard">
-                <div class="stat-grid">
-                    <div class="card" style="display:flex;align-items:center;gap:16px;">
-                        <div class="card-icon blue">📁</div>
-                        <div>
-                            <div class="card-stat blue" id="totalCases">12</div>
-                            <div class="card-sub">Total Documented Cases</div>
-                        </div>
-                    </div>
-                    <div class="card" style="display:flex;align-items:center;gap:16px;">
-                        <div class="card-icon green">💬</div>
-                        <div>
-                            <div class="card-stat green" id="activeDiscussions">8</div>
-                            <div class="card-sub">Active Discussions</div>
-                        </div>
-                    </div>
-                    <div class="card" style="display:flex;align-items:center;gap:16px;">
-                        <div class="card-icon orange">📘</div>
-                        <div>
-                            <div class="card-stat orange" id="sopUpdates">5</div>
-                            <div class="card-sub">SOP Updates This Month</div>
-                        </div>
-                    </div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="card">
+            <div class="row-header">
+              <div class="row-title">Distribusi Kasus</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-secondary);margin-bottom:5px;font-weight:500;">
+                  <span>Penyakit Dalam</span><span style="color:var(--blue-500);font-weight:600;">38%</span>
                 </div>
-
-                <div class="two-col">
-                    <div class="card">
-                        <div class="card-header">📋 Recent Activity</div>
-                        <div class="activity-feed" id="activityFeed">
-                            <div class="activity-item">
-                                <span class="activity-dot blue"></span>
-                                <span>New case added: <strong>Diabetes Mellitus Komplikasi</strong></span>
-                                <span class="activity-time">10 min ago</span>
-                            </div>
-                            <div class="activity-item">
-                                <span class="activity-dot green"></span>
-                                <span>SOP updated: <strong>Protokol Penanganan Infeksi</strong></span>
-                                <span class="activity-time">1 hour ago</span>
-                            </div>
-                            <div class="activity-item">
-                                <span class="activity-dot blue"></span>
-                                <span>New discussion: <strong>Manajemen TB Resistan Obat</strong></span>
-                                <span class="activity-time">3 hours ago</span>
-                            </div>
-                            <div class="activity-item">
-                                <span class="activity-dot orange"></span>
-                                <span>Knowledge update: <strong>Regulasi BPJS Terbaru</strong></span>
-                                <span class="activity-time">Yesterday</span>
-                            </div>
-                            <div class="activity-item">
-                                <span class="activity-dot green"></span>
-                                <span>SOP reviewed: <strong>Prosedur Admisi Pasien</strong></span>
-                                <span class="activity-time">2 days ago</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card" style="display:flex;flex-direction:column;gap:12px;">
-                        <div class="card-header">⚡ Quick Actions</div>
-                        <p style="font-size:13px;color:var(--text-secondary);">Document and share clinical knowledge to improve patient care quality.</p>
-                        <button class="btn btn-primary" onclick="openAddCaseModal()" style="align-self:flex-start;">
-                            ➕ Add New Case
-                        </button>
-                        <button class="btn btn-outline" onclick="navigateTo('sop')" style="align-self:flex-start;">
-                            📘 Browse SOP & Guidelines
-                        </button>
-                        <button class="btn btn-outline" onclick="navigateTo('discussions')" style="align-self:flex-start;">
-                            💬 Join Discussion Forum
-                        </button>
-                    </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:38%"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-secondary);margin-bottom:5px;font-weight:500;">
+                  <span>Anak</span><span style="color:var(--blue-500);font-weight:600;">25%</span>
                 </div>
-            </section>
-
-            <!-- CASE KNOWLEDGE PAGE -->
-            <section class="page" id="page-cases">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
-                    <h3 style="font-size:18px;font-weight:700;">📋 Documented Cases</h3>
-                    <button class="btn btn-primary" onclick="openAddCaseModal()">➕ Add Case</button>
+                <div class="progress-bar"><div class="progress-fill" style="width:25%"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-secondary);margin-bottom:5px;font-weight:500;">
+                  <span>Kulit & Kelamin</span><span style="color:var(--blue-500);font-weight:600;">20%</span>
                 </div>
-                <div class="case-list" id="caseList"></div>
-            </section>
+                <div class="progress-bar"><div class="progress-fill" style="width:20%"></div></div>
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-secondary);margin-bottom:5px;font-weight:500;">
+                  <span>Bedah Umum</span><span style="color:var(--blue-500);font-weight:600;">17%</span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" style="width:17%"></div></div>
+              </div>
+            </div>
+          </div>
 
-            <!-- SOP & GUIDELINES PAGE -->
-            <section class="page" id="page-sop">
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:12px;">📘 SOP & Guidelines</h3>
-                <input type="text" class="sop-search" id="sopSearch" placeholder="🔍 Search SOP by title or description..." oninput="filterSOPs()">
-                <div class="sop-list" id="sopList"></div>
-            </section>
-
-            <!-- DISCUSSION FORUM PAGE -->
-            <section class="page" id="page-discussions">
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:14px;">💬 Discussion Forum</h3>
-                <div class="thread-list" id="threadList"></div>
-            </section>
-
-            <!-- KNOWLEDGE UPDATES PAGE -->
-            <section class="page" id="page-updates">
-                <h3 style="font-size:18px;font-weight:700;margin-bottom:14px;">🔔 Knowledge Updates</h3>
-                <div class="update-list" id="updateList"></div>
-            </section>
+          <div class="card">
+            <div class="row-header">
+              <div class="row-title">Akses Cepat</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div class="quick-link" onclick="navigate('sop')">
+                <div class="quick-link-icon"><i class="fas fa-clipboard-check"></i></div>
+                SOP Triage Pasien
+              </div>
+              <div class="quick-link" onclick="navigate('updates')">
+                <div class="quick-link-icon"><i class="fas fa-bell"></i></div>
+                Update BPJS Terbaru
+              </div>
+              <div class="quick-link" onclick="navigate('forum')">
+                <div class="quick-link-icon"><i class="fas fa-comments"></i></div>
+                Forum Diskusi Klinis
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
 
-    <!-- CASE DETAIL MODAL -->
-    <div class="modal-overlay" id="caseModalOverlay">
-        <div class="modal" id="caseModal">
-            <div class="modal-header">
-                <h3 id="caseModalTitle">Case Detail</h3>
-                <button class="btn-close" onclick="closeCaseModal()" aria-label="Close">✕</button>
-            </div>
-            <div class="modal-body" id="caseModalBody"></div>
+    <!-- ══════════════════ CASE KNOWLEDGE ══════════════════ -->
+    <div class="page" id="page-cases">
+      <div class="page-header">
+        <div class="page-header-text">
+          <div class="page-eyebrow">Dokumentasi</div>
+          <div class="page-title">Case Knowledge</div>
+          <div class="page-sub">Dokumentasi kasus klinis yang telah ditangani</div>
         </div>
+        <button class="btn btn-primary" onclick="openAddCase()"><i class="fas fa-plus"></i> Tambah Kasus</button>
+      </div>
+
+      <div class="pill-nav">
+        <button class="pill active" onclick="filterCases(this,'all')">Semua</button>
+        <button class="pill" onclick="filterCases(this,'Penyakit Dalam')">Penyakit Dalam</button>
+        <button class="pill" onclick="filterCases(this,'Anak')">Anak</button>
+        <button class="pill" onclick="filterCases(this,'Kulit & Kelamin')">Kulit & Kelamin</button>
+        <button class="pill" onclick="filterCases(this,'Bedah Umum')">Bedah Umum</button>
+      </div>
+
+      <div class="search-bar">
+        <span class="search-icon"><i class="fas fa-search"></i></span>
+        <input type="text" id="case-search" placeholder="Cari kasus, diagnosis, atau kata kunci..." oninput="searchCases(this.value)">
+      </div>
+
+      <div class="cases-grid" id="cases-grid"></div>
     </div>
 
-    <!-- DISCUSSION THREAD MODAL -->
-    <div class="modal-overlay" id="discussionModalOverlay">
-        <div class="modal" id="discussionModal">
-            <div class="modal-header">
-                <h3 id="discussionModalTitle">Discussion Thread</h3>
-                <button class="btn-close" onclick="closeDiscussionModal()" aria-label="Close">✕</button>
-            </div>
-            <div class="modal-body" id="discussionModalBody"></div>
-        </div>
+    <!-- ══════════════════ CASE DETAIL ══════════════════ -->
+    <div class="page" id="page-case-detail">
+      <button class="back-btn" onclick="navigate('cases')">← Kembali ke Daftar Kasus</button>
+      <div id="case-detail-content"></div>
     </div>
 
-    <!-- ADD CASE MODAL -->
-    <div class="modal-overlay" id="addCaseModalOverlay">
-        <div class="modal" id="addCaseModal">
-            <div class="modal-header">
-                <h3>➕ Add New Case</h3>
-                <button class="btn-close" onclick="closeAddCaseModal()" aria-label="Close">✕</button>
-            </div>
-            <div class="modal-body">
-                <form id="addCaseForm" onsubmit="addNewCase(event)">
-                    <div class="form-group">
-                        <label for="caseTitle">Case Title *</label>
-                        <input type="text" id="caseTitle" required placeholder="e.g., Diabetes Mellitus with Complications">
-                    </div>
-                    <div class="form-group">
-                        <label for="caseDiagnosis">Diagnosis *</label>
-                        <input type="text" id="caseDiagnosis" required placeholder="e.g., Type 2 Diabetes Mellitus">
-                    </div>
-                    <div class="form-group">
-                        <label for="caseDescription">Short Description</label>
-                        <textarea id="caseDescription" placeholder="Brief overview of the case..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="caseTreatment">Treatment</label>
-                        <textarea id="caseTreatment" placeholder="Treatment approach..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="caseLesson">Lesson Learned</label>
-                        <textarea id="caseLesson" placeholder="Key takeaways from this case..."></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%;">✅ Save Case</button>
-                </form>
-            </div>
+    <!-- ══════════════════ SOP ══════════════════ -->
+    <div class="page" id="page-sop">
+      <div class="page-header">
+        <div class="page-header-text">
+          <div class="page-eyebrow">Prosedur</div>
+          <div class="page-title">SOP & Guidelines</div>
+          <div class="page-sub">Standar Operasional Prosedur klinik yang berlaku</div>
         </div>
+        <button class="btn btn-primary"><i class="fas fa-plus"></i> Tambah SOP</button>
+      </div>
+      <div class="search-bar">
+        <span class="search-icon"><i class="fas fa-search"></i></span>
+        <input type="text" id="sop-search" placeholder="Cari SOP atau panduan..." oninput="searchSOP(this.value)">
+      </div>
+      <div class="pill-nav">
+        <button class="pill active" onclick="filterSOP(this,'all')">Semua</button>
+        <button class="pill" onclick="filterSOP(this,'updated')">Baru Diperbarui</button>
+        <button class="pill" onclick="filterSOP(this,'new-sop')">SOP Baru</button>
+      </div>
+      <div class="sop-list" id="sop-list"></div>
     </div>
 
-    <script>
-        (function() {
-            // ============ DUMMY DATA ============
-            const casesData = [
-                { id: 1, title: 'Diabetes Mellitus Tipe 2 dengan Komplikasi Neuropati', diagnosis: 'DM Tipe 2 + Neuropati Perifer',
-                    description: 'Pasien wanita 58 tahun dengan riwayat DM tidak terkontrol selama 5 tahun.',
-                    patientSummary: 'Wanita, 58 tahun, BB 72 kg, TB 158 cm. Riwayat keluarga: ibu dengan DM. Keluhan utama: kesemutan pada kaki.',
-                    treatment: 'Metformin 2x500mg, Glimepiride 1x2mg, Gabapentin 3x300mg. Edukasi diet rendah gula dan perawatan kaki diabetik.',
-                    lesson: 'Kontrol glikemik ketat sangat penting. Skrining neuropati harus dilakukan rutin pada pasien DM >5 tahun. Keterlibatan keluarga dalam edukasi meningkatkan kepatuhan.' },
-                { id: 2, title: 'Hipertensi Grade 2 pada Pasien Geriatri', diagnosis: 'Hipertensi Grade 2',
-                    description: 'Pasien pria 72 tahun dengan tekanan darah 170/95 mmHg, disertai edema ringan.',
-                    patientSummary: 'Pria, 72 tahun, BB 65 kg. Riwayat merokok 40 tahun (berhenti 5 tahun lalu). Keluhan: pusing dan mudah lelah.',
-                    treatment: 'Amlodipine 1x10mg, Candesartan 1x8mg. Monitoring tekanan darah mingguan. Anjuran diet rendah garam.',
-                    lesson: 'Pada pasien geriatri, target tekanan darah perlu disesuaikan. Kombinasi CCB + ARB memberikan hasil baik. Edukasi kepatuhan minum obat sangat krusial.' },
-                { id: 3, title: 'Infeksi Saluran Pernapasan Akut pada Balita', diagnosis: 'ISPA + Bronkiolitis Ringan',
-                    description: 'Balita 2 tahun dengan batuk produktif, demam 38.5°C, dan napas berbunyi.',
-                    patientSummary: 'Anak laki-laki, 2 tahun 4 bulan, BB 11 kg. Imunisasi lengkap. Keluhan: batuk 4 hari, demam, rewel.',
-                    treatment: 'Nebulisasi salbutamol, Paracetamol sirup 3x120mg, cairan adekuat. Observasi 24 jam di klinik.',
-                    lesson: 'ISPA pada balita perlu penanganan cepat. Nebulisasi efektif untuk bronkiolitis ringan. Pentingnya edukasi orang tua tentang tanda bahaya ISPA.' },
-                { id: 4, title: 'Demam Berdarah Dengue Stadium II', diagnosis: 'DBD Stadium II',
-                    description: 'Pasien pria 28 tahun dengan trombosit 45.000 dan hematokrit meningkat.',
-                    patientSummary: 'Pria, 28 tahun, BB 68 kg. Demam 5 hari, nyeri otot, mual. Riwayat tinggal di area endemis DBD.',
-                    treatment: 'Cairan infus RL, monitoring trombosit dan hematokrit tiap 6 jam, Paracetamol jika demam. Rujuk ke RS jika trombosit turun <30.000.',
-                    lesson: 'Deteksi dini kebocoran plasma sangat penting. Monitoring ketat trombosit dan hematokrit. Edukasi pemberantasan sarang nyamuk kepada keluarga.' },
-                { id: 5, title: 'Infeksi Luka Pasca Operasi Appendektomi', diagnosis: 'Infeksi Luka Operasi Superfisial',
-                    description: 'Pasien wanita 34 tahun, 7 hari pasca appendektomi dengan kemerahan dan nanah pada luka.',
-                    patientSummary: 'Wanita, 34 tahun, BB 55 kg. Appendektomi 7 hari lalu. Keluhan: nyeri dan keluar cairan dari luka operasi.',
-                    treatment: 'Irigasi luka dengan NaCl 0.9%, dressing steril tiap hari, Amoxicillin-Clavulanate 3x625mg selama 7 hari.',
-                    lesson: 'Perawatan luka pasca operasi harus diajarkan dengan jelas kepada pasien. Tanda infeksi perlu dikenali lebih awal. Antibiotik profilaksis sesuai guideline.' },
-                { id: 6, title: 'Asma Bronkial Eksaserbasi Akut', diagnosis: 'Asma Bronkial Eksaserbasi Sedang',
-                    description: 'Pasien wanita 22 tahun dengan sesak napas mendadak, wheezing, dan batuk kering.',
-                    patientSummary: 'Wanita, 22 tahun, BB 50 kg. Riwayat asma sejak kecil. Pencetus: debu dan udara dingin.',
-                    treatment: 'Nebulisasi salbutamol + ipratropium, Prednison oral 3x10mg, oksigen 2L/menit. Evaluasi peak flow meter.',
-                    lesson: 'Pasien asma perlu memiliki rencana aksi asma tertulis. Identifikasi pencetus sangat membantu pencegahan eksaserbasi.' },
-                { id: 7, title: 'Gastritis Kronis dengan Helicobacter Pylori', diagnosis: 'Gastritis Kronis H. Pylori (+)',
-                    description: 'Pasien pria 45 tahun dengan nyeri ulu hati kronis, mual, dan nafsu makan menurun.',
-                    patientSummary: 'Pria, 45 tahun, BB 60 kg. Riwayat konsumsi kopi berlebih dan makan tidak teratur.',
-                    treatment: 'Triple therapy: Omeprazole 2x20mg, Amoxicillin 2x1000mg, Clarithromycin 2x500mg selama 14 hari.',
-                    lesson: 'Eradikasi H. Pylori dengan triple therapy harus tuntas 14 hari. Edukasi pola makan sehat dan hindari iritan lambung.' },
-            ];
+    <!-- ══════════════════ FORUM ══════════════════ -->
+    <div class="page" id="page-forum">
+      <div class="thread-list-view" id="thread-list-view">
+        <div class="page-header">
+          <div class="page-header-text">
+            <div class="page-eyebrow">Kolaborasi</div>
+            <div class="page-title">Discussion Forum</div>
+            <div class="page-sub">Berbagi pengetahuan dan pengalaman klinis</div>
+          </div>
+          <button class="btn btn-primary" onclick="openNewThread()"><i class="fas fa-edit"></i> Thread Baru</button>
+        </div>
+        <div class="threads-list" id="threads-list"></div>
+      </div>
 
-            const sopData = [
-                { id: 1, title: 'Prosedur Penerimaan Pasien Baru', desc: 'Alur pendaftaran hingga pasien diterima di poli yang sesuai.',
-                    updated: false, category: 'Administrasi' },
-                { id: 2, title: 'Protokol Pencegahan dan Pengendalian Infeksi', desc: 'Standar kebersihan, sterilisasi alat, dan APD.',
-                    updated: true, category: 'Klinis' },
-                { id: 3, title: 'Prosedur Tanggap Darurat Medis', desc: 'Alur penanganan kegawatdaruratan di dalam klinik.', updated: false,
-                    category: 'Klinis' },
-                { id: 4, title: 'Pedoman Pemberian Obat dan Resep', desc: 'Aturan penulisan resep, dosis, dan dispensing obat.',
-                    updated: true, category: 'Farmasi' },
-                { id: 5, title: 'Prosedur Perencanaan Pemulangan Pasien', desc: 'Tata cara discharge planning dan edukasi pasien.',
-                    updated: false, category: 'Administrasi' },
-                { id: 6, title: 'Penanganan Spesimen Laboratorium', desc: 'Prosedur pengambilan, penyimpanan, dan pengiriman sampel.',
-                    updated: true, category: 'Laboratorium' },
-                { id: 7, title: 'Protokol Telemedicine dan Konsultasi Online', desc: 'Panduan layanan konsultasi jarak jauh untuk pasien.',
-                    updated: false, category: 'Digital' },
-                { id: 8, title: 'SOP Sterilisasi Alat Medis', desc: 'Prosedur pembersihan dan sterilisasi instrumen medis.', updated: false,
-                    category: 'Klinis' },
-            ];
+      <div class="discussion-view" id="discussion-view">
+        <button class="back-btn" onclick="showThreadList()">← Kembali ke Forum</button>
+        <div id="discussion-content"></div>
+      </div>
+    </div>
 
-            const discussionsData = [
-                { id: 1, title: 'Manajemen TB Resistan Obat di Puskesmas', author: 'Dr. Andi Pratama',
-                    authorInitials: 'AP', replies: 7, messages: [
-                        { author: 'Dr. Andi Pratama', text: 'Bagaimana pengalaman rekan-rekan dalam menangani kasus TB RO? Saya memiliki pasien dengan resistansi ganda.',
-                            time: '2026-05-10 09:30' },
-                        { author: 'Dr. Siti Rahma', text: 'Saya pernah menangani 3 kasus. Kuncinya adalah kepatuhan pengobatan dan monitoring efek samping yang ketat.',
-                            time: '2026-05-10 10:15' },
-                        { author: 'Dr. Budi Santoso',
-                            text: 'Setuju dengan Dr. Siti. Selain itu, dukungan keluarga dan kunjungan rumah sangat membantu keberhasilan terapi.',
-                            time: '2026-05-10 11:00' },
-                        { author: 'Dr. Andi Pratama',
-                            text: 'Terima kasih masukannya. Apakah ada guideline terbaru untuk regimen short-course?', time: '2026-05-10 11:30' },
-                    ] },
-                { id: 2, title: 'Rehabilitasi Pasca COVID-19 pada Pasien Komorbid', author: 'Dr. Maya Lestari',
-                    authorInitials: 'ML', replies: 5, messages: [
-                        { author: 'Dr. Maya Lestari', text: 'Pasien pasca COVID dengan komorbid diabetes sering mengalami fatigue berkepanjangan. Bagaimana protokol rehabilitasi yang efektif?',
-                            time: '2026-05-08 14:00' },
-                        { author: 'Dr. Rahmat Hidayat',
-                            text: 'Saya rekomendasikan latihan pernapasan bertahap dan mobilisasi dini. Pantau saturasi oksigen secara berkala.',
-                            time: '2026-05-08 15:20' },
-                    ] },
-                { id: 3, title: 'Penatalaksanaan Demam pada Anak: Kapan Perlu Rujuk?', author: 'Dr. Sarah Widodo',
-                    authorInitials: 'SW', replies: 12, messages: [
-                        { author: 'Dr. Sarah Widodo', text: 'Seringkali orang tua panik saat anak demam. Bagaimana kriteria rujukan yang tepat untuk demam anak?',
-                            time: '2026-05-06 08:00' },
-                        { author: 'Dr. Andi Pratama',
-                            text: 'Rujuk jika demam >3 hari, disertai kejang, penurunan kesadaran, atau tanda dehidrasi berat.', time: '2026-05-06 09:10' },
-                    ] },
-                { id: 4, title: 'Penggunaan Antikoagulan pada Pasien Lansia', author: 'Dr. Budi Santoso',
-                    authorInitials: 'BS', replies: 3, messages: [
-                        { author: 'Dr. Budi Santoso',
-                            text: 'Bagaimana pertimbangan risiko perdarahan pada pasien lansia yang memerlukan antikoagulan?', time: '2026-05-04 16:00' },
-                    ] },
-            ];
+    <!-- ══════════════════ UPDATES ══════════════════ -->
+    <div class="page" id="page-updates">
+      <div class="page-header">
+        <div class="page-header-text">
+          <div class="page-eyebrow">Regulasi & Kebijakan</div>
+          <div class="page-title">Knowledge Updates</div>
+          <div class="page-sub">Pembaruan regulasi, kebijakan, dan informasi klinis terkini</div>
+        </div>
+        <span class="badge badge-critical" style="align-self:flex-start;padding:6px 12px;font-size:12px;"><i class="fas fa-exclamation-triangle"></i> 2 Penting</span>
+      </div>
+      <div class="pill-nav">
+        <button class="pill active" onclick="filterUpdates(this,'all')">Semua</button>
+        <button class="pill" onclick="filterUpdates(this,'bpjs')">BPJS</button>
+        <button class="pill" onclick="filterUpdates(this,'internal')">Internal</button>
+        <button class="pill" onclick="filterUpdates(this,'important')">Penting</button>
+      </div>
+      <div class="updates-list" id="updates-list"></div>
+    </div>
 
-            const updatesData = [
-                { id: 1, title: 'Perubahan Regulasi BPJS Kesehatan 2026', desc: 'Penyesuaian tarif INA-CBGs dan prosedur klaim untuk fasilitas kesehatan tingkat pertama.',
-                    date: '2026-05-15', important: true },
-                { id: 2, title: 'Kebijakan Internal: Pelayanan Telemedicine', desc: 'Mulai Juni 2026, klinik menyediakan layanan konsultasi online untuk pasien kontrol rutin.',
-                    date: '2026-05-10', important: true },
-                { id: 3, title: 'Pedoman Baru Penggunaan Antibiotik', desc: 'Update dari Komite Farmasi tentang stewardship antibiotik dan pencegahan resistansi.',
-                    date: '2026-05-05', important: false },
-                { id: 4, title: 'Sistem Rujukan Online Terintegrasi', desc: 'Platform rujukan baru menghubungkan klinik dengan 5 rumah sakit mitra secara real-time.',
-                    date: '2026-04-28', important: true },
-                { id: 5, title: 'Update Protokol Vaksinasi Dewasa', desc: 'Penambahan jadwal vaksin HPV dan Pneumonia untuk pasien dewasa sesuai rekomendasi terbaru.',
-                    date: '2026-04-20', important: false },
-                { id: 6, title: 'Pelatihan Wajib: BLS dan Kegawatdaruratan', desc: 'Seluruh tenaga medis wajib mengikuti pelatihan Basic Life Support sebelum Juli 2026.',
-                    date: '2026-04-15', important: false },
-            ];
+  </div>
+</main>
 
-            // ============ STATE ============
-            let currentPage = 'dashboard';
-            let allCases = [...casesData];
-            let allSOPs = [...sopData];
-            let allDiscussions = [...discussionsData];
-            let allUpdates = [...updatesData];
-            let nextCaseId = allCases.length + 1;
+<!-- ══════ MODAL: Case Detail ══════ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div id="modal-title" style="font-family:'Lora',serif;font-size:19px;line-height:1.3;font-weight:600;color:var(--text-primary);"></div>
+        <div id="modal-subtitle" style="font-size:12px;color:var(--text-tertiary);margin-top:4px;"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
 
-            // ============ DOM REFS ============
-            const sidebar = document.getElementById('sidebar');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
-            const hamburgerBtn = document.getElementById('hamburgerBtn');
-            const mainContent = document.getElementById('mainContent');
-            const breadcrumb = document.getElementById('breadcrumb');
-            const pageTitle = document.getElementById('pageTitle');
-            const allPages = document.querySelectorAll('.page');
-            const allNavButtons = document.querySelectorAll('.sidebar-nav button');
-            const caseList = document.getElementById('caseList');
-            const sopList = document.getElementById('sopList');
-            const sopSearch = document.getElementById('sopSearch');
-            const threadList = document.getElementById('threadList');
-            const updateList = document.getElementById('updateList');
-            const caseModalOverlay = document.getElementById('caseModalOverlay');
-            const caseModalTitle = document.getElementById('caseModalTitle');
-            const caseModalBody = document.getElementById('caseModalBody');
-            const discussionModalOverlay = document.getElementById('discussionModalOverlay');
-            const discussionModalTitle = document.getElementById('discussionModalTitle');
-            const discussionModalBody = document.getElementById('discussionModalBody');
-            const addCaseModalOverlay = document.getElementById('addCaseModalOverlay');
-            const totalCasesEl = document.getElementById('totalCases');
-            const activeDiscussionsEl = document.getElementById('activeDiscussions');
-            const sopUpdatesEl = document.getElementById('sopUpdates');
+<!-- ══════ MODAL: Add Case ══════ -->
+<div class="modal-overlay" id="add-case-modal" onclick="closeAddModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--blue-500);margin-bottom:5px;">Dokumentasi Baru</div>
+        <div style="font-family:'Lora',serif;font-size:19px;font-weight:600;color:var(--text-primary);">Tambah Kasus Baru</div>
+      </div>
+      <button class="modal-close" onclick="closeAddModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label class="form-label">Judul Kasus <span style="color:var(--red-500);">*</span></label>
+          <input id="new-title" class="form-input" type="text" placeholder="Misal: Pasien Demam dengan Tanda-tanda Dengue">
+        </div>
+        <div>
+          <label class="form-label">Diagnosis</label>
+          <input id="new-diag" class="form-input" type="text" placeholder="Misal: Dengue Hemorrhagic Fever Grade II">
+        </div>
+        <div>
+          <label class="form-label">Departemen</label>
+          <select id="new-dept" class="form-input">
+            <option value="Penyakit Dalam">Penyakit Dalam</option>
+            <option value="Anak">Anak</option>
+            <option value="Kulit & Kelamin">Kulit & Kelamin</option>
+            <option value="Bedah Umum">Bedah Umum</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Deskripsi Singkat</label>
+          <textarea id="new-desc" rows="3" class="form-input" placeholder="Ringkasan singkat kasus..." style="resize:vertical;"></textarea>
+        </div>
+        <div style="display:flex;gap:8px;padding-top:4px;">
+          <button class="btn btn-primary" onclick="addCase()"><i class="fas fa-save"></i> Simpan Kasus</button>
+          <button class="btn btn-ghost" onclick="closeAddModal()">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-            // ============ FUNCTIONS ============
-            function updateStats() {
-                if (totalCasesEl) totalCasesEl.textContent = allCases.length;
-                if (activeDiscussionsEl) activeDiscussionsEl.textContent = allDiscussions.length;
-                if (sopUpdatesEl) {
-                    const updatedCount = allSOPs.filter(s => s.updated).length;
-                    sopUpdatesEl.textContent = updatedCount;
-                }
-            }
+<script>
+// ══════════════════════════════════ DATA ══════════════════════════════════
 
-            function navigateTo(pageName) {
-                currentPage = pageName;
-                // Update pages
-                allPages.forEach(p => p.classList.remove('active'));
-                const targetPage = document.getElementById('page-' + pageName);
-                if (targetPage) targetPage.classList.add('active');
-                // Update nav buttons
-                allNavButtons.forEach(b => b.classList.remove('active'));
-                const activeNavBtn = document.querySelector(`.sidebar-nav button[data-page="${pageName}"]`);
-                if (activeNavBtn) activeNavBtn.classList.add('active');
-                // Update breadcrumb
-                const pageLabels = {
-                    dashboard: '📊',
-                    cases: '📋',
-                    sop: '📘',
-                    discussions: '💬',
-                    updates: '🔔'
-                };
-                const pageTitles = {
-                    dashboard: 'Dashboard',
-                    cases: 'Case Knowledge',
-                    sop: 'SOP & Guidelines',
-                    discussions: 'Discussion Forum',
-                    updates: 'Knowledge Updates'
-                };
-                breadcrumb.textContent = pageLabels[pageName] || '';
-                pageTitle.textContent = pageTitles[pageName] || '';
-                // Close mobile sidebar
-                closeSidebar();
-                // Scroll to top
-                document.querySelector('.page-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                // Re-render relevant lists
-                if (pageName === 'cases') renderCases();
-                if (pageName === 'sop') renderSOPs();
-                if (pageName === 'discussions') renderDiscussions();
-                if (pageName === 'updates') renderUpdates();
-                updateStats();
-            }
+const casesData = [
+  {
+    id: 'CSE-001', title: 'Manajemen DHF Grade III pada Pasien Anak', diag: 'Dengue Hemorrhagic Fever Grade III',
+    dept: 'Anak', isNew: true, isUpdated: false,
+    desc: 'Kasus anak 7 tahun dengan DHF berat disertai tanda syok kompensasi. Membutuhkan intervensi cairan agresif.',
+    date: '12 Jun 2025', doctor: 'dr. Sari Dewi, Sp.A',
+    patient: 'Anak laki-laki, 7 tahun, BB 22 kg. Riwayat demam 5 hari, nyeri perut, mual, dan ruam petekia.',
+    treatment: 'Resusitasi cairan kristaloid 10 ml/kgBB dalam 30 menit. Monitoring ketat hematokrit setiap 4 jam. Transfusi trombosit bila <20.000.',
+    lesson: 'Pengenalan dini tanda pre-syok kritis. Pemantauan NS1 Ag sejak hari ke-1 demam penting untuk diagnosis cepat. Kolaborasi tim perawat dan dokter harus proaktif.',
+    tags: ['DHF', 'Pediatri', 'Syok', 'Cairan']
+  },
+  {
+    id: 'CSE-002', title: 'Dermatitis Kontak Alergi pada Pekerja Industri', diag: 'Allergic Contact Dermatitis',
+    dept: 'Kulit & Kelamin', isNew: false, isUpdated: true,
+    desc: 'Pasien 35 tahun, pekerja pabrik kimia dengan keluhan ruam gatal di kedua tangan sejak 2 minggu.',
+    date: '8 Jun 2025', doctor: 'dr. Budi Santoso, Sp.KK',
+    patient: 'Laki-laki 35 tahun, bekerja di pabrik kimia 8 tahun. Ruam eritematosa vesikular di dorsum manus bilateral.',
+    treatment: 'Kortikosteroid topikal potency sedang 2x/hari selama 2 minggu. Antihistamin oral. Rekomendasi penggunaan sarung tangan nitrile. Identifikasi alergen kerja.',
+    lesson: 'Penting melakukan patch test untuk identifikasi alergen spesifik. Edukasi pasien tentang hindari papasan ulang sangat krusial untuk prognosis jangka panjang.',
+    tags: ['Dermatitis', 'Alergi', 'Occupational', 'Patch Test']
+  },
+  {
+    id: 'CSE-003', title: 'Hipertensi Emergensi dengan Encephalopathy', diag: 'Hypertensive Emergency',
+    dept: 'Penyakit Dalam', isNew: false, isUpdated: false,
+    desc: 'Pasien 58 tahun datang dengan TD 220/140 mmHg disertai penurunan kesadaran dan nyeri kepala hebat.',
+    date: '3 Jun 2025', doctor: 'dr. Hendra Wijaya, Sp.PD',
+    patient: 'Perempuan 58 tahun, TD 220/140 mmHg, GCS 12, keluhan nyeri kepala thunderclap sejak 2 jam SMRS. Riwayat HT tidak terkontrol.',
+    treatment: 'Nicardipine IV 5 mcg/kg/min, target penurunan TD tidak lebih 25% dalam 1 jam pertama. CT scan kepala emergensi. Monitoring ICU. Konsul Saraf.',
+    lesson: 'Penurunan TD yang terlalu cepat dapat memperburuk perfusi serebral. Protokol penurunan bertahap harus dipatuhi. Edukasi kepatuhan obat anti-HT sangat penting untuk pencegahan.',
+    tags: ['Hipertensi', 'Emergency', 'Neurologi', 'ICU']
+  },
+  {
+    id: 'CSE-004', title: 'Appendisitis Akut Perforasi pada Lansia', diag: 'Acute Appendicitis with Perforation',
+    dept: 'Bedah Umum', isNew: true, isUpdated: false,
+    desc: 'Pasien 72 tahun dengan appendisitis perforasi. Presentasi atipikal membuat diagnosis terlambat.',
+    date: '29 Mei 2025', doctor: 'dr. Agus Rahmat, Sp.B',
+    patient: 'Laki-laki 72 tahun, nyeri perut kanan bawah 4 hari, demam subfebris. Gejala tidak khas karena imunosenescence.',
+    treatment: 'Appendektomi laparotomi emergensi. Peritoneal lavage. Antibiotik spektrum luas post-operatif. Perawatan ICU 48 jam pertama.',
+    lesson: 'Lansia sering presentasi atipikal pada kegawatan abdomen. Ambang batas investigasi imaging (USG/CT scan) harus lebih rendah. Tidak boleh menunda keputusan operasi.',
+    tags: ['Bedah', 'Appendisitis', 'Geriatri', 'Emergency']
+  },
+  {
+    id: 'CSE-005', title: 'Pneumonia Community-Acquired pada Pasien Diabetes', diag: 'Community-Acquired Pneumonia (CAP)',
+    dept: 'Penyakit Dalam', isNew: false, isUpdated: false,
+    desc: 'Pasien DM tipe 2 dengan CAP berat dan hiperglikemia reaktif. Pengelolaan gula darah menjadi tantangan.',
+    date: '21 Mei 2025', doctor: 'dr. Ratna Kusuma, Sp.PD',
+    patient: 'Perempuan 61 tahun, DM tipe 2 sejak 15 tahun. Batuk produktif, demam, sesak. Saturasi O2 88%. GDS 380 mg/dL.',
+    treatment: 'Antibiotik empiris (Ceftriaxone + Azithromycin). Oksigenasi nasal kanul. Kontrol gula darah dengan insulin sliding scale. PSI Score: Kelas IV.',
+    lesson: 'DM merupakan faktor risiko komplikasi CAP yang signifikan. Kontrol glikemik agresif mempercepat pemulihan. Vaksinasi pneumokokus preventif sangat dianjurkan.',
+    tags: ['Pneumonia', 'Diabetes', 'CAP', 'Infeksi']
+  },
+  {
+    id: 'CSE-006', title: 'Reaksi Anafilaksis Pasca Pemberian Antibiotik', diag: 'Anaphylaxis',
+    dept: 'Penyakit Dalam', isNew: true, isUpdated: false,
+    desc: 'Pasien mengalami reaksi anafilaksis berat 10 menit setelah injeksi Ampicillin IV di poliklinik.',
+    date: '15 Mei 2025', doctor: 'dr. Dian Pertiwi',
+    patient: 'Perempuan 28 tahun, diberikan Ampicillin 1 gr IV untuk ISK. Dalam 10 menit: urtikaria generalisata, stridor, TD 70/40.',
+    treatment: 'Epinefrin 0,3 mg IM segera. Posisi supine tungkai elevasi. Antihistamin + kortikosteroid IV. Resusitasi cairan. Observasi 24 jam.',
+    lesson: 'Skin test pra-pemberian antibiotik harus SOP rutin. Seluruh staf klinis wajib terlatih protokol anafilaksis. Epinefrin harus selalu tersedia di setiap ruang tindakan.',
+    tags: ['Anafilaksis', 'Emergency', 'Alergi', 'Epinefrin']
+  }
+];
 
-            function openSidebar() {
-                sidebar.classList.add('open');
-                sidebarOverlay.classList.add('show');
-            }
+const sopData = [
+  { id: 'SOP-001', name: 'Triage Pasien IGD', dept: 'IGD', status: 'updated', date: '10 Jun 2025', ver: 'v3.2', icon: 'fas fa-exclamation-triangle' },
+  { id: 'SOP-002', name: 'Penanganan Anafilaksis', dept: 'Semua Unit', status: 'updated', date: '5 Jun 2025', ver: 'v2.1', icon: 'fas fa-bolt' },
+  { id: 'SOP-003', name: 'Prosedur Cuci Tangan (WHO Protocol)', dept: 'Semua Unit', status: 'new-sop', date: '1 Jun 2025', ver: 'v1.0', icon: 'fas fa-soap' },
+  { id: 'SOP-004', name: 'Resusitasi Cairan pada Syok', dept: 'IGD / ICU', status: 'normal', date: '20 Mei 2025', ver: 'v4.0', icon: 'fas fa-syringe' },
+  { id: 'SOP-005', name: 'Kontrol Infeksi & PPI Harian', dept: 'Semua Unit', status: 'updated', date: '18 Mei 2025', ver: 'v2.5', icon: 'fas fa-virus' },
+  { id: 'SOP-006', name: 'Pengelolaan Limbah Medis B3', dept: 'Semua Unit', status: 'normal', date: '15 Mei 2025', ver: 'v3.1', icon: 'fas fa-trash-alt' },
+  { id: 'SOP-007', name: 'Pemberian Obat High-Alert', dept: 'Farmasi / Rawat Inap', status: 'updated', date: '12 Mei 2025', ver: 'v2.0', icon: 'fas fa-pills' },
+  { id: 'SOP-008', name: 'Pengambilan Sampel Darah', dept: 'Laboratorium', status: 'new-sop', date: '8 Mei 2025', ver: 'v1.1', icon: 'fas fa-vial' },
+  { id: 'SOP-009', name: 'Perawatan Luka Post-Operasi', dept: 'Bedah', status: 'normal', date: '3 Mei 2025', ver: 'v2.3', icon: 'fas fa-bandage' },
+  { id: 'SOP-010', name: 'Informed Consent Tindakan Medis', dept: 'Semua Unit', status: 'normal', date: '1 Mei 2025', ver: 'v5.0', icon: 'fas fa-file-signature' },
+  { id: 'SOP-011', name: 'Protokol Isolasi Pasien COVID-19', dept: 'Penyakit Dalam', status: 'updated', date: '28 Apr 2025', ver: 'v6.2', icon: 'fas fa-lungs' },
+  { id: 'SOP-012', name: 'Penanganan Pasien Tidak Kooperatif', dept: 'Semua Unit', status: 'normal', date: '22 Apr 2025', ver: 'v1.5', icon: 'fas fa-handshake' },
+];
 
-            function closeSidebar() {
-                sidebar.classList.remove('open');
-                sidebarOverlay.classList.remove('show');
-            }
+const threadsData = [
+  {
+    id: 1, title: 'Rekomendasi first-line antibiotik CAP: Ceftriaxone vs Levofloxacin?',
+    author: 'dr. Hendra Wijaya', authorInit: 'HW', color: '#3B6EF6',
+    dept: 'Penyakit Dalam', replies: 8, time: '2 jam lalu',
+    messages: [
+      { author: 'dr. Hendra Wijaya', init: 'HW', color: '#3B6EF6', time: '10:30', text: 'Rekan-rekan, ingin mendiskusikan pemilihan antibiotik untuk CAP pada pasien rawat inap. Berdasarkan pengalaman saya, Ceftriaxone + Azithromycin masih menjadi pilihan utama. Namun ada beberapa kasus resisten yang mulai muncul. Bagaimana pengalaman rekan-rekan?' },
+      { author: 'dr. Ratna Kusuma', init: 'RK', color: '#10b981', time: '10:45', text: 'Setuju dengan kombinasi tersebut. Di kasus-kasus saya, kombinasi ini masih efektif >90%. Untuk pasien alergi, kita bisa pertimbangkan Levofloxacin monoterapi. Perlu diperhatikan potensi resistensi fluorokuinolon juga.' },
+      { author: 'dr. Sari Dewi', init: 'SD', color: '#f59e0b', time: '11:02', text: 'Untuk pediatri saya tentunya berbeda. Amoxicillin masih first-line untuk anak tanpa komorbid. Yang penting adalah risk stratifikasi menggunakan PSI atau CURB-65 untuk menentukan setting perawatan.' },
+      { author: 'dr. Hendra Wijaya', init: 'HW', color: '#3B6EF6', time: '11:15', text: 'Poin bagus dr. Sari. Apakah klinik kita sudah memiliki data kultur sputum lokal? Sangat membantu untuk antibiogram spesifik klinik kita.' },
+      { author: 'dr. Budi Santoso', init: 'BS', color: '#8b5cf6', time: '11:30', text: 'Laboratorium kita masih terbatas untuk kultur sputum. Ini sebenarnya jadi gap besar dalam tata laksana. Saya usulkan kita koordinasi dengan lab untuk membuat protokol pengambilan sputum yang standar.' },
+    ]
+  },
+  {
+    id: 2, title: 'Protokol Triase Pasien Pediatri: Perlunya Update SOP',
+    author: 'dr. Sari Dewi', authorInit: 'SD', color: '#f59e0b',
+    dept: 'Anak', replies: 5, time: '5 jam lalu',
+    messages: [
+      { author: 'dr. Sari Dewi', init: 'SD', color: '#f59e0b', time: '08:00', text: 'Selamat pagi rekan-rekan. Saya ingin mengangkat isu tentang SOP triase anak kita yang terakhir diupdate 2 tahun lalu. Beberapa parameter scoring sudah perlu disesuaikan dengan guideline terbaru IDAI 2024.' },
+      { author: 'Ns. Lina', init: 'LN', color: '#06b6d4', time: '08:15', text: 'Betul dr. Sari. Dari sisi perawat, sering ada kebingungan tentang cut-off RR dan HR pada anak berbeda usia. SOP yang ada terlalu general dan tidak ada tabel referensi per kelompok umur.' },
+      { author: 'dr. Sari Dewi', init: 'SD', color: '#f59e0b', time: '08:30', text: 'Baik, saya akan susun draft revisi SOP ini. Mohon masukan dari seluruh tim anak dan IGD. Target selesai akhir bulan.' },
+    ]
+  },
+  {
+    id: 3, title: 'Dokumentasi Kasus Elektronik: Apakah Sudah Efektif?',
+    author: 'dr. Admin', authorInit: 'A', color: '#14b8a6',
+    dept: 'Manajemen', replies: 12, time: '1 hari lalu',
+    messages: [
+      { author: 'dr. Admin', init: 'A', color: '#14b8a6', time: 'Kemarin 14:00', text: 'Sistem ICKS ini sudah kita gunakan 3 bulan. Saya ingin mendapat feedback dari semua: apa yang sudah berjalan baik? Apa yang perlu diperbaiki?' },
+      { author: 'dr. Ratna Kusuma', init: 'RK', color: '#10b981', time: 'Kemarin 14:20', text: 'Secara umum sangat membantu! Akses ke kasus-kasus lama jadi jauh lebih mudah. Satu request: bisa ditambahkan fitur notifikasi otomatis saat ada SOP baru?' },
+      { author: 'dr. Agus Rahmat', init: 'AR', color: '#f43f5e', time: 'Kemarin 14:45', text: 'Setuju. Untuk bagian bedah, saya usulkan tambahan field untuk dokumentasi teknik operasi. Saat ini field yang ada masih terlalu general.' },
+      { author: 'Ns. Lina', init: 'LN', color: '#06b6d4', time: 'Kemarin 15:00', text: 'Request dari perawat: tampilan mobile tolong diperbaiki. Sering kami akses dari handphone saat di bangsal.' },
+    ]
+  },
+  {
+    id: 4, title: 'Update Formularium BPJS 2025: Implikasi ke Resep Harian',
+    author: 'apt. Maya', authorInit: 'MA', color: '#22c55e',
+    dept: 'Farmasi', replies: 6, time: '2 hari lalu',
+    messages: [
+      { author: 'apt. Maya', init: 'MA', color: '#22c55e', time: '2 hari lalu 09:00', text: 'Info penting rekan-rekan dokter. Formularium BPJS per Juli 2025 ada beberapa perubahan signifikan. Beberapa obat dipindah ke Fornas dan beberapa ditambahkan. Saya lampirkan ringkasannya.' },
+      { author: 'dr. Hendra Wijaya', init: 'HW', color: '#3B6EF6', time: '2 hari lalu 09:30', text: 'Terima kasih apt. Maya. Ada implikasi langsung ke resep pasien DM kita. Beberapa analog insulin sekarang masuk fornas. Ini kabar baik!' },
+    ]
+  }
+];
 
-            // ============ RENDER FUNCTIONS ============
-            function renderCases() {
-                if (!caseList) return;
-                caseList.innerHTML = allCases.map(c => `
-                    <div class="case-item" onclick="window.openCaseDetail(${c.id})" title="Click to view details">
-                        <div class="case-icon">📁</div>
-                        <div class="case-info">
-                            <div class="case-title">${escapeHTML(c.title)}</div>
-                            <div class="case-meta">Diagnosis: ${escapeHTML(c.diagnosis)} • ${escapeHTML(c.description.substring(0, 60))}...</div>
-                        </div>
-                        <span class="case-arrow">›</span>
-                    </div>
-                `).join('');
-                updateStats();
-            }
+const updatesData = [
+  {
+    id: 1, cat: 'important', label: 'URGENT', title: 'Perubahan Prosedur Klaim BPJS Rawat Inap - Berlaku 1 Juli 2025',
+    summary: 'BPJS Kesehatan menerbitkan surat edaran tentang perubahan prosedur pengajuan klaim rawat inap. Verifikasi berkas sekarang wajib dilengkapi dengan discharge summary terstandarisasi dalam 24 jam pasca-pasien pulang.',
+    date: '12 Jun 2025', author: 'Manajemen Klinik', type: 'important'
+  },
+  {
+    id: 2, cat: 'bpjs', label: 'BPJS', title: 'Update Tarif INA-CBGs Periode II 2025',
+    summary: 'Perubahan tarif INA-CBGs untuk 47 kode prosedur efektif mulai Juli 2025. Tarif rawat inap penyakit dalam naik rata-rata 8%, sementara prosedur bedah minor disesuaikan mengikuti inflasi biaya medis.',
+    date: '8 Jun 2025', author: 'Divisi Keuangan', type: 'bpjs'
+  },
+  {
+    id: 3, cat: 'internal', label: 'INTERNAL', title: 'Kebijakan Baru: Visite Dokter Spesialis Minimal 1x/Hari',
+    summary: 'Berdasarkan hasil akreditasi ulang, klinik menetapkan kebijakan baru bahwa dokter spesialis wajib melakukan visite pasien rawat inap minimal 1 kali sehari dan mendokumentasikannya di SIMRS.',
+    date: '5 Jun 2025', author: 'Direktur Medis', type: 'internal'
+  },
+  {
+    id: 4, cat: 'bpjs', label: 'BPJS', title: 'Perpanjangan Kontrak Kerjasama BPJS Kesehatan 2025–2026',
+    summary: 'Klinik Pratama Isykarima telah resmi memperpanjang kontrak kerjasama dengan BPJS Kesehatan untuk periode 2025–2026. Tidak ada perubahan signifikan dalam syarat dan ketentuan. Nomor PKS baru telah diterbitkan.',
+    date: '1 Jun 2025', author: 'Manajemen Klinik', type: 'bpjs'
+  },
+  {
+    id: 5, cat: 'important', label: 'URGENT', title: 'Penarikan Lot Tertentu Metformin 500mg – Cek Stok Farmasi',
+    summary: 'BPOM mengeluarkan recall untuk lot tertentu Metformin 500mg dari produsen X karena kontaminasi NDMA di atas batas aman. Farmasi harap segera verifikasi stok dan informasi ke dokter terkait.',
+    date: '28 Mei 2025', author: 'apt. Maya', type: 'important'
+  },
+  {
+    id: 6, cat: 'internal', label: 'INTERNAL', title: 'Jadwal Pelatihan BHD (Basic Life Support) Seluruh Staf',
+    summary: 'Dalam rangka akreditasi dan peningkatan kompetensi, seluruh staf klinis wajib mengikuti pelatihan BHD yang dijadwalkan 20–21 Juni 2025. Daftar absensi akan dikirim ke masing-masing kepala unit.',
+    date: '25 Mei 2025', author: 'Bidang Diklat', type: 'internal'
+  }
+];
 
-            function renderSOPs(filterText = '') {
-                if (!sopList) return;
-                const filtered = allSOPs.filter(s =>
-                    s.title.toLowerCase().includes(filterText.toLowerCase()) ||
-                    s.desc.toLowerCase().includes(filterText.toLowerCase()) ||
-                    s.category.toLowerCase().includes(filterText.toLowerCase())
-                );
-                sopList.innerHTML = filtered.map(s => `
-                    <div class="sop-item ${s.updated ? 'highlight' : ''}">
-                        <span class="sop-icon">📄</span>
-                        <div class="sop-info">
-                            <div class="sop-title">${escapeHTML(s.title)} ${s.updated ? '<span class="badge badge-updated">Updated</span>' : ''}</div>
-                            <div class="sop-desc">${escapeHTML(s.desc)} • <span class="badge badge-info">${escapeHTML(s.category)}</span></div>
-                        </div>
-                    </div>
-                `).join('');
-                if (filtered.length === 0) {
-                    sopList.innerHTML =
-                        '<div style="text-align:center;padding:30px;color:var(--text-light);">No SOPs match your search.</div>';
-                }
-                updateStats();
-            }
+const activityFeed = [
+  { type: 'green', emoji: 'fas fa-file-medical', text: 'Kasus baru <strong>Appendisitis Akut Perforasi</strong> ditambahkan oleh dr. Agus Rahmat', time: '10 menit lalu' },
+  { type: 'amber', emoji: 'fas fa-clipboard-list', text: 'SOP <strong>Triage Pasien IGD</strong> diperbarui ke versi v3.2', time: '35 menit lalu' },
+  { type: 'blue', emoji: 'fas fa-comments', text: 'Diskusi baru dibuka: <strong>"Protokol Triase Anak: Perlunya Update"</strong>', time: '1 jam lalu' },
+  { type: 'rose', emoji: 'fas fa-exclamation-triangle', text: 'Update penting: <strong>Penarikan Lot Metformin 500mg</strong> dari BPOM', time: '3 jam lalu' },
+  { type: 'green', emoji: 'fas fa-file-medical', text: 'dr. Ratna Kusuma mendokumentasikan kasus <strong>Pneumonia + Diabetes</strong>', time: '5 jam lalu' },
+  { type: 'amber', emoji: 'fas fa-clipboard-list', text: 'SOP <strong>Pemberian Obat High-Alert</strong> diperbarui ke v2.0', time: '1 hari lalu' },
+  { type: 'teal', emoji: 'fas fa-bell', text: 'Kebijakan baru: <strong>Visite Dokter Minimal 1x/Hari</strong> mulai berlaku', time: '1 hari lalu' },
+];
 
-            function renderDiscussions() {
-                if (!threadList) return;
-                threadList.innerHTML = allDiscussions.map(d => `
-                    <div class="thread-item" onclick="window.openDiscussion(${d.id})" title="Click to view thread">
-                        <div class="thread-avatar">${escapeHTML(d.authorInitials)}</div>
-                        <div class="thread-info">
-                            <div class="thread-title">${escapeHTML(d.title)}</div>
-                            <div class="thread-meta">By ${escapeHTML(d.author)}</div>
-                        </div>
-                        <div class="thread-replies">${d.replies} 💬</div>
-                    </div>
-                `).join('');
-                updateStats();
-            }
+// ══════════════════════════════════ INIT ══════════════════════════════════
+let currentCaseFilter = 'all';
+let currentSOPFilter = 'all';
 
-            function renderUpdates() {
-                if (!updateList) return;
-                updateList.innerHTML = allUpdates.map(u => `
-                    <div class="update-item ${u.important ? 'important' : ''}">
-                        <div class="update-header">
-                            <span class="update-title">${escapeHTML(u.title)}</span>
-                            ${u.important ? '<span class="badge badge-important">⚠ Important</span>' : ''}
-                            <span class="badge badge-new">New</span>
-                        </div>
-                        <div class="update-date">📅 ${escapeHTML(u.date)}</div>
-                        <div class="update-desc">${escapeHTML(u.desc)}</div>
-                    </div>
-                `).join('');
-                updateStats();
-            }
+document.addEventListener('DOMContentLoaded', () => {
+  setDate();
+  renderActivity();
+  renderCases();
+  renderSOP();
+  renderThreads();
+  renderUpdates();
+});
 
-            function filterSOPs() {
-                const filterText = sopSearch ? sopSearch.value : '';
-                renderSOPs(filterText);
-            }
+function setDate() {
+  const d = new Date();
+  document.getElementById('topbar-date').textContent =
+    d.toLocaleDateString('id-ID', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
 
-            // ============ MODAL FUNCTIONS ============
-            window.openCaseDetail = function(caseId) {
-                const caseItem = allCases.find(c => c.id === caseId);
-                if (!caseItem) return;
-                caseModalTitle.textContent = '📋 ' + caseItem.title;
-                caseModalBody.innerHTML = `
-                    <div class="info-row">
-                        <span class="info-label">Diagnosis:</span>
-                        <span class="info-value">${escapeHTML(caseItem.diagnosis)}</span>
-                    </div>
-                    <div class="section-title">👤 Patient Summary</div>
-                    <p>${escapeHTML(caseItem.patientSummary)}</p>
-                    <div class="section-title">💊 Treatment</div>
-                    <p>${escapeHTML(caseItem.treatment)}</p>
-                    <div class="section-title">💡 Lesson Learned</div>
-                    <p>${escapeHTML(caseItem.lesson)}</p>
-                `;
-                caseModalOverlay.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            };
+// ══════════════════════════════════ NAVIGATION ══════════════════════════════
+const pageNames = {
+  dashboard: 'Dashboard',
+  cases: 'Case Knowledge',
+  sop: 'SOP & Guidelines',
+  forum: 'Discussion Forum',
+  updates: 'Knowledge Updates',
+  'case-detail': 'Detail Kasus'
+};
 
-            window.closeCaseModal = function() {
-                caseModalOverlay.classList.remove('show');
-                document.body.style.overflow = '';
-            };
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
-            window.openDiscussion = function(discussionId) {
-                const disc = allDiscussions.find(d => d.id === discussionId);
-                if (!disc) return;
-                discussionModalTitle.textContent = '💬 ' + disc.title;
-                discussionModalBody.innerHTML = `
-                    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:14px;">Started by <strong>${escapeHTML(disc.author)}</strong> • ${disc.replies} replies</p>
-                    ${disc.messages.map(m => `
-                        <div class="discussion-message">
-                            <div class="msg-author">👤 ${escapeHTML(m.author)}</div>
-                            <div class="msg-text">${escapeHTML(m.text)}</div>
-                            <div class="msg-time">🕐 ${escapeHTML(m.time)}</div>
-                        </div>
-                    `).join('')}
-                `;
-                discussionModalOverlay.classList.add('show');
-                document.body.style.overflow = 'hidden';
-            };
+  const pageEl = document.getElementById('page-' + page);
+  if (pageEl) pageEl.classList.add('active');
 
-            window.closeDiscussionModal = function() {
-                discussionModalOverlay.classList.remove('show');
-                document.body.style.overflow = '';
-            };
+  const navEl = document.querySelector('[data-page="' + page + '"]');
+  if (navEl) navEl.classList.add('active');
 
-            window.openAddCaseModal = function() {
-                addCaseModalOverlay.classList.add('show');
-                document.body.style.overflow = 'hidden';
-                document.getElementById('caseTitle').focus();
-            };
+  const nameEl = document.getElementById('topbar-page-name');
+  if (nameEl) nameEl.textContent = pageNames[page] || page;
 
-            window.closeAddCaseModal = function() {
-                addCaseModalOverlay.classList.remove('show');
-                document.body.style.overflow = '';
-                document.getElementById('addCaseForm').reset();
-            };
+  if (page === 'forum') showThreadList();
+  document.querySelector('.page-content').scrollTo(0, 0);
+}
 
-            window.addNewCase = function(event) {
-                event.preventDefault();
-                const title = document.getElementById('caseTitle').value.trim();
-                const diagnosis = document.getElementById('caseDiagnosis').value.trim();
-                const description = document.getElementById('caseDescription').value.trim();
-                const treatment = document.getElementById('caseTreatment').value.trim();
-                const lesson = document.getElementById('caseLesson').value.trim();
-                if (!title || !diagnosis) return;
-                const newCase = {
-                    id: nextCaseId++,
-                    title: title,
-                    diagnosis: diagnosis,
-                    description: description || 'No description provided.',
-                    patientSummary: 'Newly added case - details to be completed.',
-                    treatment: treatment || 'Treatment details pending.',
-                    lesson: lesson || 'Lesson learned to be documented.'
-                };
-                allCases.unshift(newCase);
-                renderCases();
-                updateStats();
-                // Add activity
-                const activityFeed = document.getElementById('activityFeed');
-                if (activityFeed) {
-                    const newActivity = document.createElement('div');
-                    newActivity.className = 'activity-item';
-                    newActivity.innerHTML = `
-                        <span class="activity-dot blue"></span>
-                        <span>New case added: <strong>${escapeHTML(title)}</strong></span>
-                        <span class="activity-time">Just now</span>
-                    `;
-                    activityFeed.insertBefore(newActivity, activityFeed.firstChild);
-                }
-                window.closeAddCaseModal();
-                // Navigate to cases page
-                navigateTo('cases');
-            };
+// ══════════════════════════════════ ACTIVITY ══════════════════════════════
+function renderActivity() {
+  const el = document.getElementById('activity-feed');
+  el.innerHTML = activityFeed.map(a => `
+    <div class="feed-item">
+      <div class="feed-dot-wrap ${a.type}"><i class="${a.emoji}"></i></div>
+      <div style="flex:1;">
+        <div class="feed-text">${a.text}</div>
+        <div class="feed-time">${a.time}</div>
+      </div>
+    </div>
+  `).join('');
+}
 
-            // ============ EVENT LISTENERS ============
-            // Sidebar navigation
-            allNavButtons.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const page = this.getAttribute('data-page');
-                    if (page) navigateTo(page);
-                });
-            });
+// ══════════════════════════════════ CASES ══════════════════════════════════
+function renderCases(data = casesData, filter = 'all') {
+  const filtered = data.filter(c => filter === 'all' || c.dept === filter);
+  const el = document.getElementById('cases-grid');
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon"><i class="fas fa-search"></i></div><p>Tidak ada kasus yang sesuai filter.</p></div>';
+    return;
+  }
+  el.innerHTML = filtered.map(c => `
+    <div class="case-card" onclick="openCaseDetail('${c.id}')">
+      <div class="case-card-top">
+        <span class="case-id-chip">${c.id}</span>
+        <div class="case-badges">
+          ${c.isNew ? '<span class="badge badge-new">New</span>' : ''}
+          ${c.isUpdated ? '<span class="badge badge-updated">Updated</span>' : ''}
+        </div>
+      </div>
+      <div class="case-title">${c.title}</div>
+      <div><span class="case-diag">${c.diag}</span></div>
+      <div class="case-desc">${c.desc}</div>
+      <div class="case-footer">
+        <div class="case-meta">
+          <div><i class="fas fa-user-md"></i> ${c.doctor}</div>
+          <div><i class="fas fa-calendar-alt"></i> ${c.date}</div>
+        </div>
+        <div class="case-arrow"><i class="fas fa-arrow-right"></i></div>
+      </div>
+    </div>
+  `).join('');
+}
 
-            // Hamburger
-            hamburgerBtn.addEventListener('click', function() {
-                if (sidebar.classList.contains('open')) {
-                    closeSidebar();
-                } else {
-                    openSidebar();
-                }
-            });
+function filterCases(btn, filter) {
+  currentCaseFilter = filter;
+  document.querySelectorAll('.pill-nav .pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const q = document.getElementById('case-search').value;
+  searchCases(q);
+}
 
-            // Overlay click to close sidebar
-            sidebarOverlay.addEventListener('click', closeSidebar);
+function searchCases(q) {
+  const lower = q.toLowerCase();
+  const filtered = casesData.filter(c => {
+    const matchFilter = currentCaseFilter === 'all' || c.dept === currentCaseFilter;
+    const matchSearch = !q || c.title.toLowerCase().includes(lower) || c.diag.toLowerCase().includes(lower) || c.desc.toLowerCase().includes(lower);
+    return matchFilter && matchSearch;
+  });
+  renderCases(filtered, 'all');
+}
 
-            // Modal overlay clicks
-            caseModalOverlay.addEventListener('click', function(e) {
-                if (e.target === caseModalOverlay) window.closeCaseModal();
-            });
-            discussionModalOverlay.addEventListener('click', function(e) {
-                if (e.target === discussionModalOverlay) window.closeDiscussionModal();
-            });
-            addCaseModalOverlay.addEventListener('click', function(e) {
-                if (e.target === addCaseModalOverlay) window.closeAddCaseModal();
-            });
+function openCaseDetail(id) {
+  const c = casesData.find(x => x.id === id);
+  if (!c) return;
 
-            // Keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    window.closeCaseModal();
-                    window.closeDiscussionModal();
-                    window.closeAddCaseModal();
-                    closeSidebar();
-                }
-            });
+  navigate('case-detail');
+  const navEl = document.querySelector('[data-page="cases"]');
+  if (navEl) navEl.classList.add('active');
 
-            // SOP search
-            if (sopSearch) {
-                sopSearch.addEventListener('input', filterSOPs);
-            }
+  document.getElementById('case-detail-content').innerHTML = `
+    <div style="background:var(--bg-white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:24px 26px;margin-bottom:18px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+            <span class="case-id-chip">${c.id}</span>
+            <span style="background:var(--slate-100);color:var(--text-secondary);font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;border:1px solid var(--border);">${c.dept}</span>
+            ${c.isNew ? '<span class="badge badge-new">New</span>' : ''}
+            ${c.isUpdated ? '<span class="badge badge-updated">Updated</span>' : ''}
+          </div>
+          <h1 style="font-family:'Lora',serif;font-size:22px;font-weight:600;color:var(--text-primary);letter-spacing:-0.4px;line-height:1.3;margin-bottom:10px;">${c.title}</h1>
+          <span class="case-diag">${c.diag}</span>
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);"><i class="fas fa-user-md"></i> ${c.doctor}</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:3px;"><i class="fas fa-calendar-alt"></i> ${c.date}</div>
+        </div>
+      </div>
+    </div>
 
-            // ============ INITIAL RENDER ============
-            renderCases();
-            renderSOPs();
-            renderDiscussions();
-            renderUpdates();
-            updateStats();
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px;">
+      <div class="detail-field"><div class="detail-label">Departemen</div><div class="detail-value">${c.dept}</div></div>
+      <div class="detail-field"><div class="detail-label">Tanggal</div><div class="detail-value">${c.date}</div></div>
+      <div class="detail-field"><div class="detail-label">Dokter</div><div class="detail-value">${c.doctor}</div></div>
+    </div>
 
-            // ============ EXPOSE TO WINDOW ============
-            window.navigateTo = navigateTo;
-            window.openCaseDetail = window.openCaseDetail;
-            window.closeCaseModal = window.closeCaseModal;
-            window.openDiscussion = window.openDiscussion;
-            window.closeDiscussionModal = window.closeDiscussionModal;
-            window.openAddCaseModal = window.openAddCaseModal;
-            window.closeAddCaseModal = window.closeAddCaseModal;
-            window.addNewCase = window.addNewCase;
-            window.filterSOPs = filterSOPs;
-            window.escapeHTML = escapeHTML;
+    <div class="info-card" style="border-left:3px solid var(--sky-400);">
+      <div class="info-card-label" style="color:var(--sky-500);"><i class="fas fa-user-injured"></i> Ringkasan Pasien</div>
+      <div class="info-card-text">${c.patient}</div>
+    </div>
+    <div class="info-card" style="border-left:3px solid var(--blue-400);">
+      <div class="info-card-label" style="color:var(--blue-500);"><i class="fas fa-pills"></i> Penanganan & Terapi</div>
+      <div class="info-card-text">${c.treatment}</div>
+    </div>
+    <div class="info-card" style="border-left:3px solid var(--green-400);">
+      <div class="info-card-label" style="color:var(--green-500);"><i class="fas fa-lightbulb"></i> Lesson Learned</div>
+      <div class="info-card-text">${c.lesson}</div>
+    </div>
 
-            console.log('🏥 ICKS - Integrated Clinical Knowledge System initialized successfully.');
-            console.log('📊 Dashboard | 📋 Cases:', allCases.length, '| 📘 SOPs:', allSOPs.length, '| 💬 Discussions:',
-                allDiscussions.length, '| 🔔 Updates:', allUpdates.length);
-        })();
+    <div style="margin-top:16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <span style="font-size:11.5px;color:var(--text-tertiary);font-weight:600;">Tag:</span>
+      ${c.tags.map(t => `<span class="tag">#${t}</span>`).join('')}
+    </div>
+  `;
+}
 
-        // Utility: Escape HTML
-        function escapeHTML(str) {
-            if (!str) return '';
-            const div = document.createElement('div');
-            div.textContent = str;
-            return div.innerHTML;
-        }
-    </script>
+// ══════════════════════════════════ ADD CASE ══════════════════════════════
+function openAddCase() { document.getElementById('add-case-modal').classList.add('open'); }
+function closeAddModal(e) {
+  if (!e || e.target === document.getElementById('add-case-modal')) {
+    document.getElementById('add-case-modal').classList.remove('open');
+  }
+}
+function addCase() {
+  const title = document.getElementById('new-title').value.trim();
+  const diag = document.getElementById('new-diag').value.trim();
+  const dept = document.getElementById('new-dept').value;
+  const desc = document.getElementById('new-desc').value.trim();
+  if (!title) { alert('Judul kasus wajib diisi!'); return; }
+  const newCase = {
+    id: `CSE-${String(casesData.length + 1).padStart(3, '0')}`,
+    title, diag: diag || 'Belum didiagnosis', dept, desc: desc || '-',
+    isNew: true, isUpdated: false,
+    date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }),
+    doctor: 'dr. Admin',
+    patient: '-', treatment: '-', lesson: '-', tags: [dept]
+  };
+  casesData.unshift(newCase);
+  activityFeed.unshift({ type: 'green', emoji: 'fas fa-file-medical', text: `Kasus baru <strong>${title}</strong> ditambahkan oleh dr. Admin`, time: 'baru saja' });
+  renderCases(); renderActivity();
+  closeAddModal();
+  document.getElementById('new-title').value = '';
+  document.getElementById('new-diag').value = '';
+  document.getElementById('new-desc').value = '';
+}
+
+// ══════════════════════════════════ SOP ══════════════════════════════════
+function renderSOP(data = sopData, filter = 'all') {
+  const filtered = filter === 'all' ? data : data.filter(s => s.status === filter);
+  const el = document.getElementById('sop-list');
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty"><div class="empty-icon"><i class="fas fa-clipboard-list"></i></div><p>Tidak ada SOP yang sesuai.</p></div>';
+    return;
+  }
+  el.innerHTML = filtered.map(s => `
+    <div class="sop-item ${s.status !== 'normal' ? s.status : ''}" onclick="alert('Membuka SOP: ${s.name}')">
+      <div class="sop-left">
+        <div class="sop-icon-wrap"><i class="${s.icon}"></i></div>
+        <div>
+          <div class="sop-name">${s.name}</div>
+          <div class="sop-dept"><i class="fas fa-folder"></i> ${s.dept}</div>
+        </div>
+      </div>
+      <div class="sop-right">
+        ${s.status === 'updated' ? '<span class="badge badge-updated">Updated</span>' : ''}
+        ${s.status === 'new-sop' ? '<span class="badge badge-new">New</span>' : ''}
+        <span style="font-size:11.5px;background:var(--slate-100);padding:2px 7px;border-radius:99px;border:1px solid var(--border);">${s.ver}</span>
+        <span><i class="fas fa-calendar-alt"></i> ${s.date}</span>
+        <span style="color:var(--blue-400);"><i class="fas fa-arrow-right"></i></span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterSOP(btn, filter) {
+  currentSOPFilter = filter;
+  document.querySelectorAll('#page-sop .pill-nav .pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const q = document.getElementById('sop-search').value;
+  searchSOP(q);
+}
+
+function searchSOP(q) {
+  const lower = q.toLowerCase();
+  const filtered = sopData.filter(s => {
+    const matchFilter = currentSOPFilter === 'all' || s.status === currentSOPFilter;
+    const matchSearch = !q || s.name.toLowerCase().includes(lower) || s.dept.toLowerCase().includes(lower);
+    return matchFilter && matchSearch;
+  });
+  renderSOP(filtered, 'all');
+}
+
+// ══════════════════════════════════ FORUM ══════════════════════════════════
+function renderThreads() {
+  const el = document.getElementById('threads-list');
+  el.innerHTML = threadsData.map(t => `
+    <div class="thread-item" onclick="openThread(${t.id})">
+      <div class="thread-avatar" style="background:${t.color};">${t.authorInit}</div>
+      <div class="thread-content">
+        <div class="thread-title">${t.title}</div>
+        <div class="thread-meta"><i class="fas fa-user-md"></i> ${t.author} &nbsp;<i class="fas fa-circle" style="font-size:8px;"></i>&nbsp; <i class="fas fa-tag"></i> ${t.dept}</div>
+      </div>
+      <div class="thread-stats">
+        <div class="thread-replies"><i class="fas fa-comments"></i> ${t.replies}</div>
+        <div class="thread-time">${t.time}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showThreadList() {
+  document.getElementById('thread-list-view').style.display = '';
+  document.getElementById('discussion-view').classList.remove('active');
+}
+
+function openThread(id) {
+  const t = threadsData.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('thread-list-view').style.display = 'none';
+  const dv = document.getElementById('discussion-view');
+  dv.classList.add('active');
+  dv.querySelector('#discussion-content').innerHTML = `
+    <div class="card" style="margin-bottom:16px;border-left:3px solid var(--blue-500);">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="thread-avatar" style="background:${t.color};width:42px;height:42px;border-radius:var(--radius-sm);">${t.authorInit}</div>
+        <div>
+          <div style="font-family:'Lora',serif;font-size:17px;font-weight:600;line-height:1.4;color:var(--text-primary);">${t.title}</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-top:3px;">oleh ${t.author} · ${t.dept} · ${t.time}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="msg-list">
+      ${t.messages.map((m, i) => `
+        <div class="msg-bubble${i % 2 === 0 ? '' : ' mine'}">
+          <div class="msg-header">
+            <div class="msg-avatar" style="background:${m.color};">${m.init}</div>
+            <div class="msg-author">${m.author}</div>
+            <div class="msg-time">${m.time}</div>
+          </div>
+          <div class="msg-text">${m.text}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="card" style="margin-top:14px;background:var(--slate-50);">
+      <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;"><i class="fas fa-edit"></i> Tambah Balasan</div>
+      <textarea rows="3" placeholder="Tulis balasan Anda..." class="form-input" style="resize:vertical;"></textarea>
+      <div style="margin-top:10px;display:flex;gap:8px;">
+        <button class="btn btn-primary btn-sm" onclick="alert('Balasan terkirim!')"><i class="fas fa-paper-plane"></i> Kirim Balasan</button>
+        <button class="btn btn-ghost btn-sm" onclick="showThreadList()">Batal</button>
+      </div>
+    </div>
+  `;
+}
+
+function openNewThread() {
+  const title = prompt('Judul thread baru:');
+  if (!title) return;
+  threadsData.unshift({
+    id: Date.now(), title, author: 'dr. Admin', authorInit: 'A', color: '#14b8a6',
+    dept: 'Umum', replies: 0, time: 'baru saja',
+    messages: [{ author: 'dr. Admin', init: 'A', color: '#14b8a6', time: 'baru saja', text: 'Thread baru dibuka. Silakan mulai diskusi.' }]
+  });
+  renderThreads();
+}
+
+// ══════════════════════════════════ UPDATES ══════════════════════════════
+function renderUpdates(data = updatesData) {
+  const el = document.getElementById('updates-list');
+  el.innerHTML = data.map(u => `
+    <div class="update-item ${u.type}" onclick="alert('Membuka detail: ${u.title.replace(/'/g,"\\'")}')">
+      <div class="update-top">
+        <span class="update-cat-tag ${u.cat}">${u.label}</span>
+        <span class="badge ${u.type === 'important' ? 'badge-critical' : u.type === 'bpjs' ? 'badge-info' : 'badge-new'}">
+          ${u.type === 'important' ? '<i class="fas fa-exclamation-triangle"></i> Penting' : u.type === 'bpjs' ? '<i class="fas fa-hospital"></i> BPJS' : '<i class="fas fa-building"></i> Internal'}
+        </span>
+      </div>
+      <div class="update-title">${u.title}</div>
+      <div class="update-summary">${u.summary}</div>
+      <div class="update-footer">
+        <span><i class="fas fa-user"></i> ${u.author}</span>
+        <span>·</span>
+        <span><i class="fas fa-calendar-alt"></i> ${u.date}</span>
+        <span class="update-read-more">Baca selengkapnya <i class="fas fa-arrow-right"></i></span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterUpdates(btn, filter) {
+  document.querySelectorAll('#page-updates .pill-nav .pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  const filtered = filter === 'all' ? updatesData : updatesData.filter(u => u.type === filter);
+  renderUpdates(filtered);
+}
+
+// ══════════════════════════════════ MODAL ══════════════════════════════════
+function openModal(title, subtitle, body) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-subtitle').textContent = subtitle;
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.getElementById('add-case-modal').classList.remove('open');
+  }
+});
+</script>
 </body>
 </html>
